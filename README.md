@@ -1,11 +1,19 @@
-## 2 projects:
+## Apps
 
 1. Sentiment Analysis API
 
-2. Twitter Front End
+2. Twitter Mod
+
+3. Basic text input Mod
+
+4. Gmod
+
+5. Users/UI
 
 ### API
 accepts block of text
+
+more retweeted tweets should have more weight
 
 has a positive and negative dictionary, with words as keys and their weight as values
 
@@ -19,4 +27,4 @@ chart ranking most used adjectives
 
 ### Twitter
 
-be able to search by hashtag, account, or just words
+be able to search by hashtag, account, or just words by themselves
