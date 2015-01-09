@@ -1,16 +1,21 @@
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
 from django.contrib.auth import authenticate, login, logout
-from users.models import User
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.models import User, AnonymousUser
+
 from django.shortcuts import render, redirect
 from django.views.generic import View
+
 
 
 class Index(View):
     def get(self, request):
         if request.user.is_anonymous():
-            return render( request, 'users/index.html', {'create_form':UserCreationForm(), 'login_form': AuthenticationForm() } )
+            request.context_dict[ 'create_form' ] = UserCreationForm()
+            request.context_dict[ 'login_form' ] = AuthenticationForm()
+
+            return render( request, 'users/index.html', request.context_dict )
         else:
-            return redirect('/twit')
+            return redirect('/blog')
 
 
 class Signup(View):
@@ -21,7 +26,10 @@ class Signup(View):
             a = User.objects.create_user( username=cd.get('username'), password=cd.get('password1'))
             return redirect('/?error={}'.format("signup a success! now please login") )
         else:
-            return render( request, 'users/index.html', {'create_form':UserCreationForm(), 'login_form': AuthenticationForm() } )
+            request.context_dict[ 'create_form' ] = form
+            request.context_dict[ 'login_form' ] = AuthenticationForm()
+
+            return render( request, 'users/index.html', request.context_dict )
 
 
 class Login(View):
@@ -33,9 +41,13 @@ class Login(View):
 
         if form.is_valid():
             login(request, form.get_user())
-            return redirect('/twit/tweet')
+            
+            return redirect('/blog')
         else:
-            return render( request, 'users/index.html', {'create_form':UserCreationForm(), 'login_form': AuthenticationForm() } )
+            request.context_dict[ 'create_form' ] = UserCreationForm()
+            request.context_dict[ 'login_form' ] = form
+
+            return render( request, 'users/index.html', request.context_dict )
 
 class Logout(View):
     def get(self, request):
@@ -48,7 +60,9 @@ class Profile(View):
         if request.user.is_anonymous():
             return redirect( '/')
         else:
-            return render( request, 'users/profile.html', {'form':PasswordChangeForm(request.user)})
+            request.context_dict['mygames'] = Whole_Game.objects.filter(final_score=0)
+            request.context_dict['form'] = PasswordChangeForm(request.user)
+            return render( request, 'users/profile.html', request.context_dict)
 
 
 class ChangePass(View):
