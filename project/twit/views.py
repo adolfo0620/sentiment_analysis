@@ -1,13 +1,13 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from twit.keysecret import secrets
+
 from django.contrib.auth.models import User, AnonymousUser
-# from twit.models import User
+
+from sa_api.views import Score
+
 from twython import Twython
 from pprint import pprint
-
-positives = ['love','loved','like','liked','awesome','amazing','good','great','excellent', 'nice', 'sweet']
-negatives = ['hate','hated','dislike','disliked','awful','terrible','bad','painful','worst', 'disgraceful', 'horrible']
 
 
 class Index( View ):
@@ -50,14 +50,7 @@ class Results( View ):
         u = User.objects.get(pk=request.session['user_id'])
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], u.token, u.secret)
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=100)
-        pos = 0
-        neg = 0
-        for result in results['statuses']:
-            for word in positives:
-                if word in result['text']:
-                    pos += 1
-            for word in negatives:
-                if word in result['text']:
-                    neg += 1
-        return render(request, 'twit/results.html', {'hashtag':request.GET['query'], 'posi':pos, 'nega':neg})
+        final = Score(results)
+        final = final.eval()
+        return render(request, 'twit/results.html', {'hashtag':request.GET['query'], 'pos':final.pos, 'neg':final.neg})
        
