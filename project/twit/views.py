@@ -1,7 +1,7 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from twit.keysecret import secrets
-from twit.models import User
+from users.models import *
 from twython import Twython
 from pprint import pprint
 
