@@ -1,2 +1,1 @@
-secrets = {'APP_KEY':'SDrWGEHkITtiwCmFdPHnhYeZV',
-'APP_SECRET' : 'yaHtxi7OjTeBw6cQPjPkN09UzNyWXbxxzJ3QYYawc10J6cjlcv'}
+ secrets = {'APP_KEY':"1BNlnfqpOY5xq3htdPTIJlOTO","APP_SECRET":"FMLiWiD7rmXYMpU3HN6Ux2OU88sGSPwwST5RhM2wOdSJfHswoZ"} 
