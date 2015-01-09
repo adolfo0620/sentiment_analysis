@@ -17,7 +17,7 @@
 	// innerRadius handles the size of the donut compared to the size of the overall chart
 	// outerRadius handles the overall chart size
 	// startAngle handles at what point does the section start and endAngle is straightforward
-	var arc = d3.svg.arc().innerRadius(50).outerRadius(100).startAngle(5).endAngle(1.5*Math.PI);
+	var arc = d3.svg.arc().innerRadius(50).outerRadius(100).startAngle(0).endAngle(1.5*Math.PI);
 	// here is where we catually create the chart
 	vis.append("path") .attr("d", arc) .attr("transform", "translate(300,200)");
 	</script>
