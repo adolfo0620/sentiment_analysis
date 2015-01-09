@@ -6,4 +6,5 @@ urlpatterns = patterns('',
     url(r'^twit/', include('twit.urls')),
     url(r'^$', include('users.urls')),
     url(r'^users/', include('users.urls'))
+    url(r'^testmod/', include('testMod.urls'))
 )

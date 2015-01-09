@@ -39,6 +39,8 @@ INSTALLED_APPS = (
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'twit',
+    'sa_api',
+    'testMod',
 )
 
 MIDDLEWARE_CLASSES = (
