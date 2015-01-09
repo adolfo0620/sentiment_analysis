@@ -1,0 +1,15 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<form name='query' action='/twit/results' method='GET' >
+    Enter a hashtag:<br>
+    {%csrf_token%}
+    <input type="text" name="query" value='#'>
+    <input type="submit" value="search">
+</form>
+
+</body>
+</html>
