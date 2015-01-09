@@ -1,1 +1,0 @@
- secrets = {'APP_KEY':"1BNlnfqpOY5xq3htdPTIJlOTO","APP_SECRET":"FMLiWiD7rmXYMpU3HN6Ux2OU88sGSPwwST5RhM2wOdSJfHswoZ"} 

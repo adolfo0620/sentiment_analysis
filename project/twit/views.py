@@ -5,7 +5,6 @@ from twit.models import User
 from twython import Twython
 from pprint import pprint
 
-#if wanted to flesh out, weigh words, add more words.  no free one right now
 positives = ['love','loved','like','liked','awesome','amazing','good','great','excellent', 'nice', 'sweet']
 negatives = ['hate','hated','dislike','disliked','awful','terrible','bad','painful','worst', 'disgraceful', 'horrible']
 
