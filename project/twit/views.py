@@ -1,8 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
 from twit.keysecret import secrets
+
+from django.contrib.auth.models import User, AnonymousUser
+
 from sa_api.views import Score
-from twit.models import User
+
 from twython import Twython
 from pprint import pprint
 
