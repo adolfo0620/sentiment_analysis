@@ -28,3 +28,5 @@ to start, thinking pie chart for total sentiment, positive score, and negative s
 line graph, charting change in sentiment over time if given date imputs (i.e., tweet dates)
 
 chart ranking most used adjectives
+
+scattered plot points of other popular hashtags associated 
