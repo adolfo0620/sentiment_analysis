@@ -5,7 +5,6 @@ from twit.models import User
 from twython import Twython
 from pprint import pprint
 
-#if wanted to flesh out, weigh words, add more words.  no free one right now
 positives = ['love','loved','like','liked','awesome','amazing','good','great','excellent', 'nice', 'sweet']
 negatives = ['hate','hated','dislike','disliked','awful','terrible','bad','painful','worst', 'disgraceful', 'horrible']
 
@@ -37,21 +36,8 @@ class Callback( View ):
         print(final_step['oauth_token'])
         print(final_step['oauth_token_secret'])
         request.session['user_id'] = u.id
-        return redirect( '/twit/tweet')
+        return redirect( '/twit/Eval')
 
-
-class Tweet( View ):
-    def get(self, request):
-        if not 'user_id' in request.session:
-            return redirect ('/twit')
-        return render ( request, 'twit/tweet.html')
-
-    def post(self, request):
-        u = User.objects.get(pk=request.session['user_id'])
-        twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], u.token, u.secret)
-        tweet = request.POST['tweet']
-        twitter.update_status(status=tweet)
-        return redirect( '/twit/tweet')
 
 class Eval( View ):
     def get(self, request):
