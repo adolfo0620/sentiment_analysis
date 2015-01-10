@@ -1,4 +1,5 @@
 from django.conf.urls import patterns, include, url
+from django.contrib.auth.decorators import login_required
 from users.views import *
 
 urlpatterns = patterns('',
@@ -6,6 +7,6 @@ urlpatterns = patterns('',
     url( r'^signup$', Signup.as_view() ),
     url( r'^login$', Login.as_view() ),
     url( r'^logout$', Logout.as_view() ),
-    url( r'^profile$', Profile.as_view() ),
-    url( r'^changePassword$', ChangePassword.as_view() ),
+    url( r'^profile$', login_required( Profile.as_view() ), name="profile" ),
+    url( r'^changePassword$', login_required( ChangePassword.as_view() ), name="changePassword" ),
 )

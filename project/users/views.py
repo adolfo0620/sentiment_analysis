@@ -10,13 +10,13 @@ from pprint import pprint
 
 class Index( View ):
     def get( self, request ):
-        if request.user.is_anonymous():
-            request.context_dict['create_form'] = UserCreationForm()
-            request.context_dict['login_form'] = AuthenticationForm()
+        # if request.user.is_anonymous():
+        #     request.context_dict['create_form'] = UserCreationForm()
+        #     request.context_dict['login_form'] = AuthenticationForm()
 
-            return render( request, 'users/index.html', request.context_dict )
-        else:
-            return redirect( request.GET.get( 'next', '/twit' ) )
+        #     return render( request, 'users/index.html', request.context_dict )
+        # else:
+        return redirect( request.GET.get( 'next', '/twit' ) )
 
 class Signup( View ):
     def get( self, request ):
