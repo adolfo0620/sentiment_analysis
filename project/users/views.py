@@ -33,7 +33,7 @@ class Signup( View ):
     def post( self, request ):
         form = UserCreationForm( request.POST )
         if form.is_valid():
-            # form.save()
+            form.save()
 
             next_url = request.POST.get( 'next', '' )
             if next_url:
