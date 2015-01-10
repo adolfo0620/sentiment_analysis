@@ -1,78 +1,106 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
-from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, UserChangeForm
 
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
+class Index( View ):
+    def get( self, request ):
 
+        return redirect( request.GET.get( 'next', '/users/profile' ) )
 
-class Index(View):
-    def get(self, request):
-        if request.user.is_anonymous():
-            request.context_dict[ 'create_form' ] = UserCreationForm()
-            request.context_dict[ 'login_form' ] = AuthenticationForm()
+class Signup( View ):
+    def get( self, request ):
+        next_url = request.GET.get( 'next', False )
+        if next_url:
+            request.context_dict['next_url'] = next_url
+            request.context_dict['next_string'] = '?next={}'.format( next_url )
 
-            return render( request, 'users/index.html', request.context_dict )
-        else:
-            return redirect('/blog')
+        request.context_dict['form'] = UserCreationForm()
 
+        return render( request, 'users/signup.html', request.context_dict )
 
-class Signup(View):
-    def post(self, request):
-        form = UserCreationForm(request.POST)
+    def post( self, request ):
+        form = UserCreationForm( request.POST )
         if form.is_valid():
-            cd = form.cleaned_data
-            a = User.objects.create_user( username=cd.get('username'), password=cd.get('password1'))
-            return redirect('/?error={}'.format("signup a success! now please login") )
+            form.save()
+
+            next_url = request.POST.get( 'next', '' )
+            if next_url:
+                next_url = '&next={}'.format( next_url )
+
+            return redirect( 
+                '/users/login?message={}{}'.format( 
+                    "Signup a success, please login",
+                    next_url
+                ) 
+            )
         else:
-            request.context_dict[ 'create_form' ] = form
-            request.context_dict[ 'login_form' ] = AuthenticationForm()
+            request.context_dict['form'] = form
 
-            return render( request, 'users/index.html', request.context_dict )
+            return render( request, 'users/signup.html', request.context_dict )
 
+class Login( View ):
+    def get( self, request ):
+        next_url = request.GET.get( 'next', False )
+        if next_url:
+            request.context_dict['next_url'] = next_url
+            request.context_dict['next_string'] = '?next={}'.format( next_url )
 
-class Login(View):
-    def post(self, request):
+        request.context_dict['message'] = request.GET.get( 'message', '' )
+        request.context_dict['form'] = AuthenticationForm()
 
-        # odd that None is needed...
-        # http://stackoverflow.com/a/21504550/3140931
-        form = AuthenticationForm( None,request.POST )
+        return render( request, 'users/login.html', request.context_dict )
+
+    def post( self, request ):
+        form = AuthenticationForm( request, request.POST )
 
         if form.is_valid():
-            login(request, form.get_user())
+            login( request, form.get_user() )
             
-            return redirect('/blog')
+            return redirect( request.POST.get( 'next', '/twit' ) )
         else:
-            request.context_dict[ 'create_form' ] = UserCreationForm()
-            request.context_dict[ 'login_form' ] = form
+            request.context_dict[ 'form' ] = form
 
-            return render( request, 'users/index.html', request.context_dict )
+            return render( request, 'users/login.html', request.context_dict )
 
-class Logout(View):
-    def get(self, request):
-        logout(request)
+class Logout( View ):
+    def get( self, request ):
+        logout( request )
+
         return redirect( '/')
 
+class Profile( View ):
+    def get( self, request ):
+        request.context_dict['form'] = UserChangeForm( None, instance=request.user )
 
-class Profile(View):
-    def get(self, request):
-        if request.user.is_anonymous():
-            return redirect( '/')
+        return render( request, 'users/profile.html', request.context_dict )
+
+    def post( self, request ):
+        form = UserChangeForm( request.POST, instance=request.user )
+        if form.is_valid():
+            form.save()
+
+            return redirect( '/users/profile' )
+
+        request.context_dict['form'] = form
+
+        return render( request, 'users/profile.html', request.context_dict )
+
+
+class ChangePassword( View ):
+    def get( self, request ):
+            request.context_dict['form'] = PasswordChangeForm( user=request.user )
+
+            return render( request, 'users/changePassword.html', request.context_dict )
+
+    def post( self, request ):
+        form = PasswordChangeForm( user=request.user, data=request.POST )
+
+        if form.is_valid():
+
+            return redirect ( '/users/profile' )
         else:
-            request.context_dict['mygames'] = Whole_Game.objects.filter(final_score=0)
-            request.context_dict['form'] = PasswordChangeForm(request.user)
-            return render( request, 'users/profile.html', request.context_dict)
+            request.context_dict['form'] = form
 
-
-class ChangePass(View):
-    def post(self, request):
-        user = authenticate(username=request.user.username, password=request.POST["old_password"])
-        if request.POST['new_password1'] != request.POST['new_password2']:
-            return redirect ('/users/profile/?error={}'.format("new passwords don't match"))
-        if user is not None:
-            user.set_password(request.POST['new_password1'])
-            user.save()
-            return redirect ('/users/profile')
-        else:
-            return redirect ('/users/profile/?error={}'.format("incorrect password"))
+            return render( request, 'users/changePassword.html', request.context_dict )

@@ -42,7 +42,7 @@ class Callback( View ):
 
 class Eval( View ):
     def get(self, request):
-        return render ( request, 'twit/evaluate.html')
+        return render ( request, 'twit/evaluate.html', request.context_dict )
 
 
 class Results( View ):
@@ -53,5 +53,9 @@ class Results( View ):
         final = Score(results)
         final.eval()
         print(final.pos)
-        return render(request, 'twit/results.html', {'hashtag':request.GET['query'], 'pos':final.pos, 'neg':final.neg})
+        
+        request.context_dict['hashtag'] = request.GET['query']
+        request.context_dict['pos'] = final.pos
+        request.context_dict['neg'] = final.neg
+        return render(request, 'twit/results.html', request.context_dict)
        
