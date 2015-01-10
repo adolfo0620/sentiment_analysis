@@ -26,8 +26,9 @@ TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-AUTH_USER_MODEL = 'twit.User'
+# What is this???
+# SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
+# AUTH_USER_MODEL = 'twit.User'
 
 # Application definition
 
@@ -53,6 +54,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'users.middleware.ajax',
 )
 
 ROOT_URLCONF = 'project.urls'
