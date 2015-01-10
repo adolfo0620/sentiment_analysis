@@ -8,17 +8,11 @@ from pprint import pprint
 
 class Index( View ):
     def get( self, request ):
-        # if request.user.is_anonymous():
-        #     request.context_dict['create_form'] = UserCreationForm()
-        #     request.context_dict['login_form'] = AuthenticationForm()
 
-        #     return render( request, 'users/index.html', request.context_dict )
-        # else:
-        return redirect( request.GET.get( 'next', '/twit' ) )
+        return redirect( request.GET.get( 'next', '/users/profile' ) )
 
 class Signup( View ):
     def get( self, request ):
-
         next_url = request.GET.get( 'next', False )
         if next_url:
             request.context_dict['next_url'] = next_url
@@ -50,7 +44,6 @@ class Signup( View ):
 
 class Login( View ):
     def get( self, request ):
-
         next_url = request.GET.get( 'next', False )
         if next_url:
             request.context_dict['next_url'] = next_url
@@ -62,10 +55,7 @@ class Login( View ):
         return render( request, 'users/login.html', request.context_dict )
 
     def post( self, request ):
-
-        # odd that None is needed...
-        # http://stackoverflow.com/a/21504550/3140931
-        form = AuthenticationForm( None,request.POST )
+        form = AuthenticationForm( request, request.POST )
 
         if form.is_valid():
             login( request, form.get_user() )
@@ -84,8 +74,6 @@ class Logout( View ):
 
 class Profile( View ):
     def get( self, request ):
-        # user = User.objects.get( id=request.user.id )
-        # pprint( **request.user )
         request.context_dict['form'] = UserChangeForm( None, instance=request.user )
 
         return render( request, 'users/profile.html', request.context_dict )
