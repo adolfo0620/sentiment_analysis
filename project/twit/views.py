@@ -27,17 +27,17 @@ class Callback( View ):
         oauth_verifier = request.GET['oauth_verifier']
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['OAUTH_TOKEN'], request.session['OAUTH_TOKEN_SECRET'])
         final_step = twitter.get_authorized_tokens(oauth_verifier)
-        if User.objects.filter(username=final_step['screen_name']).exists():
-            u = User.objects.get(username=final_step['screen_name'])
-        else:
-            u = User.objects.create(username=final_step['screen_name'])
-        u.token = final_step['oauth_token']
-        u.secret = final_step['oauth_token_secret']
-        u.save()
-        print(final_step['oauth_token'])
-        print(final_step['oauth_token_secret'])
-        request.session['user_id'] = u.id
-        return redirect( '/twit/Eval')
+        # if User.objects.filter(username=final_step['screen_name']).exists():
+        #     u = User.objects.get(username=final_step['screen_name'])
+        # else:
+        #     u = User.objects.create(username=final_step['screen_name'])
+        # u.token = final_step['oauth_token']
+        # u.secret = final_step['oauth_token_secret']
+        # u.save()
+        # request.session['user_id'] = u.id
+        request.session['oauth_token'] = final_step['oauth_token']
+        request.session['oauth_token_secret'] = final_step['oauth_token_secret']
+        return redirect( '/twit/eval')
 
 
 class Eval( View ):
@@ -47,10 +47,11 @@ class Eval( View ):
 
 class Results( View ):
     def get(self, request):
-        u = User.objects.get(pk=request.session['user_id'])
-        twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], u.token, u.secret)
+        # u = User.objects.get(pk=request.session['user_id'])
+        twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=100)
         final = Score(results)
-        final = final.eval()
+        final.eval()
+        print(final.pos)
         return render(request, 'twit/results.html', {'hashtag':request.GET['query'], 'pos':final.pos, 'neg':final.neg})
        

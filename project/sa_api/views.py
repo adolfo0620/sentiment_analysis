@@ -8,9 +8,9 @@ class Score():
 
     def eval(self):
         for result in self.text['statuses']:
-            for word in positives:
+            for word in self.positive:
                 if word in result['text']:
                     self.pos += 1
-            for word in negatives:
+            for word in self.negative:
                 if word in result['text']:
                     self.neg += 1
