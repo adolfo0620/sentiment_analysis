@@ -30,8 +30,8 @@ class Signup( View ):
         form = UserCreationForm( request.POST )
         if form.is_valid():
             form.save()
-            
-            return redirect( '/users/?error={}'.format( "Signup a success, please login" ) )
+
+            return redirect( '/users/login?message={}'.format( "Signup a success, please login" ) )
         else:
             request.context_dict['form'] = form
 
@@ -40,6 +40,7 @@ class Signup( View ):
 
 class Login( View ):
     def get( self, request ):
+        request.context_dict['message'] = request.GET.get( 'message', '' )
         request.context_dict['form'] = AuthenticationForm()
 
         return render( request, 'users/login.html', request.context_dict )
