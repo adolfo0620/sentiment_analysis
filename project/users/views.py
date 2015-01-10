@@ -1,7 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, UserChangeForm
-from django.contrib.auth.models import User, AnonymousUser
-from django.contrib.auth import get_user_model
 
 from django.shortcuts import render, redirect
 from django.views.generic import View
@@ -106,7 +104,6 @@ class Profile( View ):
 
 class ChangePassword( View ):
     def get( self, request ):
-            user = User.objects.get( id=request.user.id )
             request.context_dict['form'] = PasswordChangeForm( user=request.user )
 
             return render( request, 'users/changePassword.html', request.context_dict )
