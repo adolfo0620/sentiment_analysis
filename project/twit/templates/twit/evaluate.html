@@ -1,15 +1,30 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title></title>
-</head>
-<body>
-<form name='query' action='/twit/results' method='GET' >
-    Enter a hashtag:<br>
-    {%csrf_token%}
-    <input type="text" name="query" value='#'>
-    <input type="submit" value="search">
-</form>
+{% extends base_template %}
 
-</body>
-</html>
+{% block title %}Evaluate - {% endblock %}
+
+{% block content %}
+	{% load bootstrap %}
+
+<div class="panel panel-default">
+
+	<div class="panel-heading panel-title">
+		Evaluate 
+	</div>
+
+	<div class="panel-body">
+		<form name='query' action='/twit/results' method='GET' >
+		    <h2>Enter a hashtag:</h2>
+		    <!-- csfr token is not needed/ should not be used for GET requests 
+		    {%csrf_token%}
+		    -->
+		    <input type="text" name="query" value='#'>
+		    <input type="submit" value="search">
+		</form>
+	</div>
+
+	<div class="panel-footer">
+		&nbsp;
+	</div>
+
+</div>
+{% endblock %}

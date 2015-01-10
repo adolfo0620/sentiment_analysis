@@ -1,12 +1,13 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
-from twit.keysecret import secrets
-from twit.models import User
+# from twit.keysecret import secrets
+
+from django.contrib.auth.models import User, AnonymousUser
+
+from sa_api.views import Score
+
 from twython import Twython
 from pprint import pprint
-
-positives = ['love','loved','like','liked','awesome','amazing','good','great','excellent', 'nice', 'sweet']
-negatives = ['hate','hated','dislike','disliked','awful','terrible','bad','painful','worst', 'disgraceful', 'horrible']
 
 
 class Index( View ):
@@ -26,37 +27,35 @@ class Callback( View ):
         oauth_verifier = request.GET['oauth_verifier']
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['OAUTH_TOKEN'], request.session['OAUTH_TOKEN_SECRET'])
         final_step = twitter.get_authorized_tokens(oauth_verifier)
-        if User.objects.filter(username=final_step['screen_name']).exists():
-            u = User.objects.get(username=final_step['screen_name'])
-        else:
-            u = User.objects.create(username=final_step['screen_name'])
-        u.token = final_step['oauth_token']
-        u.secret = final_step['oauth_token_secret']
-        u.save()
-        print(final_step['oauth_token'])
-        print(final_step['oauth_token_secret'])
-        request.session['user_id'] = u.id
-        return redirect( '/twit/Eval')
+        # if User.objects.filter(username=final_step['screen_name']).exists():
+        #     u = User.objects.get(username=final_step['screen_name'])
+        # else:
+        #     u = User.objects.create(username=final_step['screen_name'])
+        # u.token = final_step['oauth_token']
+        # u.secret = final_step['oauth_token_secret']
+        # u.save()
+        # request.session['user_id'] = u.id
+        request.session['oauth_token'] = final_step['oauth_token']
+        request.session['oauth_token_secret'] = final_step['oauth_token_secret']
+        return redirect( '/twit/eval')
 
 
 class Eval( View ):
     def get(self, request):
-        return render ( request, 'twit/evaluate.html')
+        return render ( request, 'twit/evaluate.html', request.context_dict )
 
 
 class Results( View ):
     def get(self, request):
-        u = User.objects.get(pk=request.session['user_id'])
-        twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], u.token, u.secret)
+        # u = User.objects.get(pk=request.session['user_id'])
+        twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=100)
-        pos = 0
-        neg = 0
-        for result in results['statuses']:
-            for word in positives:
-                if word in result['text']:
-                    pos += 1
-            for word in negatives:
-                if word in result['text']:
-                    neg += 1
-        return render(request, 'twit/results.html', {'hashtag':request.GET['query'], 'posi':pos, 'nega':neg})
+        final = Score(results)
+        final.eval()
+        print(final.pos)
+        
+        request.context_dict['hashtag'] = request.GET['query']
+        request.context_dict['pos'] = final.pos
+        request.context_dict['neg'] = final.neg
+        return render(request, 'twit/results.html', request.context_dict)
        
