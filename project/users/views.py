@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, UserChangeForm
 from django.contrib.auth.models import User, AnonymousUser
 from django.contrib.auth import get_user_model
 
@@ -86,21 +86,33 @@ class Logout( View ):
 
 class Profile( View ):
     def get( self, request ):
-        if request.user.is_anonymous():
-            return redirect( '/')
+        # user = User.objects.get( id=request.user.id )
+        # pprint( **request.user )
+        request.context_dict['form'] = UserChangeForm( None, instance=request.user )
 
-        else:
-            return render( request, 'users/profile.html', request.context_dict)
+        return render( request, 'users/profile.html', request.context_dict )
+
+    def post( self, request ):
+        form = UserChangeForm( request.POST, instance=request.user )
+        if form.is_valid():
+            form.save()
+
+            return redirect( '/users/profile' )
+
+        request.context_dict['form'] = form
+
+        return render( request, 'users/profile.html', request.context_dict )
+
 
 class ChangePassword( View ):
     def get( self, request ):
             user = User.objects.get( id=request.user.id )
-            request.context_dict['form'] = PasswordChangeForm( get_user_model() )
+            request.context_dict['form'] = PasswordChangeForm( user=request.user )
 
             return render( request, 'users/changePassword.html', request.context_dict )
 
     def post( self, request ):
-        form = PasswordChangeForm( get_user_model(), request.POST )
+        form = PasswordChangeForm( user=request.user, data=request.POST )
 
         if form.is_valid():
 
