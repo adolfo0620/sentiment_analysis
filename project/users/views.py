@@ -61,14 +61,13 @@ class Logout( View ):
 
         return redirect( '/')
 
-
 class Profile( View ):
     def get( self, request ):
         if request.user.is_anonymous():
             return redirect( '/')
+
         else:
             return render( request, 'users/profile.html', request.context_dict)
-
 
 class ChangePassword( View ):
     def get( self, request ):
@@ -85,5 +84,5 @@ class ChangePassword( View ):
             return redirect ( '/users/profile' )
         else:
             request.context_dict['form'] = form
-            
+
             return render( request, 'users/changePassword.html', request.context_dict )
