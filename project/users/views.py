@@ -10,33 +10,41 @@ from pprint import pprint
 
 
 
-class Index(View):
-    def get(self, request):
+class Index( View ):
+    def get( self, request ):
         if request.user.is_anonymous():
-            request.context_dict[ 'create_form' ] = UserCreationForm()
-            request.context_dict[ 'login_form' ] = AuthenticationForm()
+            request.context_dict['create_form'] = UserCreationForm()
+            request.context_dict['login_form'] = AuthenticationForm()
 
             return render( request, 'users/index.html', request.context_dict )
         else:
-            return redirect('/blog')
+            return redirect( request.GET.get( 'next', '/twit' ) )
 
+class Signup( View ):
+    def get( self, request ):
+        request.context_dict['form'] = UserCreationForm()
 
-class Signup(View):
-    def post(self, request):
-        form = UserCreationForm(request.POST)
+        return render( request, 'users/signup.html', request.context_dict )
+
+    def post( self, request ):
+        form = UserCreationForm( request.POST )
         if form.is_valid():
-            cd = form.cleaned_data
-            a = User.objects.create_user( username=cd.get('username'), password=cd.get('password1'))
-            return redirect('/?error={}'.format("signup a success! now please login") )
+            form.save()
+            
+            return redirect( '/users/?error={}'.format( "Signup a success, please login" ) )
         else:
-            request.context_dict[ 'create_form' ] = form
-            request.context_dict[ 'login_form' ] = AuthenticationForm()
+            request.context_dict['form'] = form
 
-            return render( request, 'users/index.html', request.context_dict )
+            return render( request, 'users/signup.html', request.context_dict )
 
 
-class Login(View):
-    def post(self, request):
+class Login( View ):
+    def get( self, request ):
+        request.context_dict['form'] = AuthenticationForm()
+
+        return render( request, 'users/login.html', request.context_dict )
+
+    def post( self, request ):
 
         # odd that None is needed...
         # http://stackoverflow.com/a/21504550/3140931
@@ -45,26 +53,24 @@ class Login(View):
         if form.is_valid():
             login( request, form.get_user() )
             
-            return redirect( '/blog' )
+            return redirect( request.GET.get( 'next', '/twit' ) )
         else:
-            request.context_dict[ 'create_form' ] = UserCreationForm()
-            request.context_dict[ 'login_form' ] = form
+            request.context_dict[ 'form' ] = form
 
-            return render( request, 'users/index.html', request.context_dict )
+            return render( request, 'users/login.html', request.context_dict )
 
-class Logout(View):
-    def get(self, request):
-        logout(request)
+class Logout( View ):
+    def get( self, request ):
+        logout( request )
 
         return redirect( '/')
 
 
-class Profile(View):
-    def get(self, request):
+class Profile( View ):
+    def get( self, request ):
         if request.user.is_anonymous():
             return redirect( '/')
         else:
-
             return render( request, 'users/profile.html', request.context_dict)
 
 
