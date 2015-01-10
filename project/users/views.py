@@ -6,10 +6,6 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
-from pprint import pprint
-
-
-
 class Index( View ):
     def get( self, request ):
         if request.user.is_anonymous():
@@ -36,7 +32,6 @@ class Signup( View ):
             request.context_dict['form'] = form
 
             return render( request, 'users/signup.html', request.context_dict )
-
 
 class Login( View ):
     def get( self, request ):
@@ -83,13 +78,12 @@ class ChangePassword( View ):
             return render( request, 'users/changePassword.html', request.context_dict )
 
     def post( self, request ):
-        pprint( dir( get_user_model() ) )
         form = PasswordChangeForm( get_user_model(), request.POST )
 
         if form.is_valid():
 
             return redirect ( '/users/profile' )
         else:
-
             request.context_dict['form'] = form
+            
             return render( request, 'users/changePassword.html', request.context_dict )
