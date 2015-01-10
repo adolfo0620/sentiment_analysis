@@ -4,8 +4,6 @@ from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, Auth
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
-from pprint import pprint
-
 class Index( View ):
     def get( self, request ):
 
