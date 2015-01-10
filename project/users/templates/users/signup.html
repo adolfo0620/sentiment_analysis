@@ -5,7 +5,7 @@
 {% block content %}
 	{%  load bootstrap %}
 
-<div class="panel panel-defualt">
+<div class="panel panel-default">
 
 	<div class="panel-heading panel-title">
 		Sign up 
@@ -14,6 +14,7 @@
 	<div class="panel-body">
 		<form action="/users/signup" method="POST">
 		{% csrf_token %}
+		<input type="hidden" name="next" value="{{ next_url }}" />
 
 		{% boot_form_fields form %}
 
@@ -24,5 +25,13 @@
 
 		</form>
 	</div>
+
+		<div class="panel-footer">
+		&nbsp;
+		<a class="pull-right" href="/users/login{{ next_string }}">
+			Already have an account? Login!
+		</a>
+	</div>
+
 </div>
 {% endblock %}

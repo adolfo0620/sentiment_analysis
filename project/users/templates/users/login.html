@@ -1,6 +1,11 @@
-{% load bootstrap %}
+{% extends base_template %}
 
-<div class="panel panel-defualt">
+{% block title %}Login - {% endblock %}
+
+{% block content %}
+	{%  load bootstrap %}
+
+<div class="panel panel-default">
 
 	<div class="panel-heading panel-title">
 		Login {{ message }}
@@ -9,6 +14,7 @@
 	<div class="panel-body">
 		<form action="/users/login" method="POST">
 		{% csrf_token %}
+		<input type="hidden" name="next" value="{{ next_url }}" />
 
 		{% boot_form_fields form %}
 
@@ -19,4 +25,13 @@
 
 		</form>
 	</div>
+
+	<div class="panel-footer">
+		&nbsp;
+		<a class="pull-right" href="/users/signup{{ next_string }}">
+			Dont have an account? Sign up!
+		</a>
+	</div>
+
 </div>
+{% endblock %}

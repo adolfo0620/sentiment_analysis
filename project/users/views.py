@@ -6,6 +6,8 @@ from django.contrib.auth import get_user_model
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
+from pprint import pprint
+
 class Index( View ):
     def get( self, request ):
         if request.user.is_anonymous():
@@ -18,6 +20,12 @@ class Index( View ):
 
 class Signup( View ):
     def get( self, request ):
+
+        next_url = request.GET.get( 'next', False )
+        if next_url:
+            request.context_dict['next_url'] = next_url
+            request.context_dict['next_string'] = '?next={}'.format( next_url )
+
         request.context_dict['form'] = UserCreationForm()
 
         return render( request, 'users/signup.html', request.context_dict )
@@ -25,9 +33,18 @@ class Signup( View ):
     def post( self, request ):
         form = UserCreationForm( request.POST )
         if form.is_valid():
-            form.save()
+            # form.save()
 
-            return redirect( '/users/login?message={}'.format( "Signup a success, please login" ) )
+            next_url = request.POST.get( 'next', '' )
+            if next_url:
+                next_url = '&next={}'.format( next_url )
+
+            return redirect( 
+                '/users/login?message={}{}'.format( 
+                    "Signup a success, please login",
+                    next_url
+                ) 
+            )
         else:
             request.context_dict['form'] = form
 
@@ -35,6 +52,12 @@ class Signup( View ):
 
 class Login( View ):
     def get( self, request ):
+
+        next_url = request.GET.get( 'next', False )
+        if next_url:
+            request.context_dict['next_url'] = next_url
+            request.context_dict['next_string'] = '?next={}'.format( next_url )
+
         request.context_dict['message'] = request.GET.get( 'message', '' )
         request.context_dict['form'] = AuthenticationForm()
 
@@ -49,7 +72,7 @@ class Login( View ):
         if form.is_valid():
             login( request, form.get_user() )
             
-            return redirect( request.GET.get( 'next', '/twit' ) )
+            return redirect( request.POST.get( 'next', '/twit' ) )
         else:
             request.context_dict[ 'form' ] = form
 
