@@ -1,6 +1,6 @@
 from django.shortcuts import render, redirect
 from django.views.generic import View
-# from twit.keysecret import secrets
+from twit.keysecret import secrets
 
 from django.contrib.auth.models import User, AnonymousUser
 
@@ -52,7 +52,7 @@ class Results( View ):
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=100)
         final = Score(results)
         final.eval()
-        print(final.pos)
+        print(final.pos, final.neg)
         
         request.context_dict['hashtag'] = request.GET['query']
         request.context_dict['pos'] = final.pos
