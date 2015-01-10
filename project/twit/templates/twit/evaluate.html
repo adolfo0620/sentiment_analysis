@@ -13,12 +13,20 @@
 
 	<div class="panel-body">
 		<form name='query' action='/twit/results' method='GET' >
-		    <h2>Enter a hashtag:</h2>
+		    
 		    <!-- csfr token is not needed/ should not be used for GET requests 
-		    {%csrf_token%}
-		    -->
-		    <input type="text" name="query" value='#'>
-		    <input type="submit" value="search">
+		    {%csrf_token%}-->
+
+		    <div class="form-group">
+        
+		        <label class="control-label">
+		        	<h2>Enter a hashtag:</h2>
+		        </label>
+		        <input type="text" name="query" value="#" class="form-control" />
+		    </div>
+		    <button type="submit" class="btn btn-default">
+		    	Search
+		    </button>
 		</form>
 	</div>
 
