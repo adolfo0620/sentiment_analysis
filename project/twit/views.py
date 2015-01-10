@@ -27,14 +27,14 @@ class Callback( View ):
         oauth_verifier = request.GET['oauth_verifier']
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['OAUTH_TOKEN'], request.session['OAUTH_TOKEN_SECRET'])
         final_step = twitter.get_authorized_tokens(oauth_verifier)
-        # if User.objects.filter(username=final_step['screen_name']).exists():
-        #     u = User.objects.get(username=final_step['screen_name'])
-        # else:
-        #     u = User.objects.create(username=final_step['screen_name'])
-        # u.token = final_step['oauth_token']
-        # u.secret = final_step['oauth_token_secret']
-        # u.save()
-        # request.session['user_id'] = u.id
+        if User.objects.filter(username=final_step['screen_name']).exists():
+            u = User.objects.get(username=final_step['screen_name'])
+        else:
+            u = User.objects.create(username=final_step['screen_name'])
+        u.token = final_step['oauth_token']
+        u.secret = final_step['oauth_token_secret']
+        u.save()
+        request.session['user_id'] = u.id
         request.session['oauth_token'] = final_step['oauth_token']
         request.session['oauth_token_secret'] = final_step['oauth_token_secret']
         return redirect( '/twit/eval')
