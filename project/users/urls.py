@@ -8,5 +8,5 @@ urlpatterns = patterns('',
     url( r'^login$', Login.as_view() ),
     url( r'^logout$', Logout.as_view() ),
     url( r'^profile$', login_required( Profile.as_view() ), name="profile" ),
-    url( r'^changePassword$', login_required( ChangePassword.as_view() ), name="changePassword" ),
+    url( r'^changepassword$', login_required( ChangePassword.as_view() ), name="changePassword" ),
 )
