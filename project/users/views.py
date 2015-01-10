@@ -1,9 +1,12 @@
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
 from django.contrib.auth.models import User, AnonymousUser
+from django.contrib.auth import get_user_model
 
 from django.shortcuts import render, redirect
 from django.views.generic import View
+
+from pprint import pprint
 
 
 
@@ -40,9 +43,9 @@ class Login(View):
         form = AuthenticationForm( None,request.POST )
 
         if form.is_valid():
-            login(request, form.get_user())
+            login( request, form.get_user() )
             
-            return redirect('/blog')
+            return redirect( '/blog' )
         else:
             request.context_dict[ 'create_form' ] = UserCreationForm()
             request.context_dict[ 'login_form' ] = form
@@ -52,6 +55,7 @@ class Login(View):
 class Logout(View):
     def get(self, request):
         logout(request)
+
         return redirect( '/')
 
 
@@ -60,19 +64,25 @@ class Profile(View):
         if request.user.is_anonymous():
             return redirect( '/')
         else:
-            request.context_dict['mygames'] = Whole_Game.objects.filter(final_score=0)
-            request.context_dict['form'] = PasswordChangeForm(request.user)
+
             return render( request, 'users/profile.html', request.context_dict)
 
 
-class ChangePass(View):
-    def post(self, request):
-        user = authenticate(username=request.user.username, password=request.POST["old_password"])
-        if request.POST['new_password1'] != request.POST['new_password2']:
-            return redirect ('/users/profile/?error={}'.format("new passwords don't match"))
-        if user is not None:
-            user.set_password(request.POST['new_password1'])
-            user.save()
-            return redirect ('/users/profile')
+class ChangePassword( View ):
+    def get( self, request ):
+            user = User.objects.get( id=request.user.id )
+            request.context_dict['form'] = PasswordChangeForm( get_user_model() )
+
+            return render( request, 'users/changePassword.html', request.context_dict )
+
+    def post( self, request ):
+        pprint( dir( get_user_model() ) )
+        form = PasswordChangeForm( get_user_model(), request.POST )
+
+        if form.is_valid():
+
+            return redirect ( '/users/profile' )
         else:
-            return redirect ('/users/profile/?error={}'.format("incorrect password"))
+
+            request.context_dict['form'] = form
+            return render( request, 'users/changePassword.html', request.context_dict )

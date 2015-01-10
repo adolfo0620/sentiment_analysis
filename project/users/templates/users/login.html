@@ -1,0 +1,22 @@
+{% load bootstrap %}
+
+<div class="panel panel-defualt">
+
+	<div class="panel-heading panel-title">
+		Login
+	</div>
+
+	<div class="panel-body">
+		<form action="/users/changePassword" method="POST">
+		{% csrf_token %}
+
+		{% boot_form_fields form %}
+
+		<button type="submit" class="btn btn-default">
+			<span class="glyphicon glyphicon-share-alt"></span>
+			Login
+		</button>
+
+		</form>
+	</div>
+</div>
