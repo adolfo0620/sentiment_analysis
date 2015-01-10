@@ -1,3 +1,6 @@
+
+## this does not belong in the views.py file, please make a new file or find a better place.
+
 class Score():
     def __init__(self, string):
         self.positive = ['love','loved','like','liked','awesome','amazing','good','great','excellent', 'nice', 'sweet']
