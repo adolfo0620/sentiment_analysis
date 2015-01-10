@@ -1,26 +1,16 @@
 from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm
-from django.contrib.auth.models import User, AnonymousUser
-from django.contrib.auth import get_user_model
+from django.contrib.auth.forms import UserCreationForm, PasswordChangeForm, AuthenticationForm, UserChangeForm
 
 from django.shortcuts import render, redirect
 from django.views.generic import View
 
-from pprint import pprint
-
 class Index( View ):
     def get( self, request ):
-        # if request.user.is_anonymous():
-        #     request.context_dict['create_form'] = UserCreationForm()
-        #     request.context_dict['login_form'] = AuthenticationForm()
 
-        #     return render( request, 'users/index.html', request.context_dict )
-        # else:
-        return redirect( request.GET.get( 'next', '/twit' ) )
+        return redirect( request.GET.get( 'next', '/users/profile' ) )
 
 class Signup( View ):
     def get( self, request ):
-
         next_url = request.GET.get( 'next', False )
         if next_url:
             request.context_dict['next_url'] = next_url
@@ -52,7 +42,6 @@ class Signup( View ):
 
 class Login( View ):
     def get( self, request ):
-
         next_url = request.GET.get( 'next', False )
         if next_url:
             request.context_dict['next_url'] = next_url
@@ -64,10 +53,7 @@ class Login( View ):
         return render( request, 'users/login.html', request.context_dict )
 
     def post( self, request ):
-
-        # odd that None is needed...
-        # http://stackoverflow.com/a/21504550/3140931
-        form = AuthenticationForm( None,request.POST )
+        form = AuthenticationForm( request, request.POST )
 
         if form.is_valid():
             login( request, form.get_user() )
@@ -86,21 +72,30 @@ class Logout( View ):
 
 class Profile( View ):
     def get( self, request ):
-        if request.user.is_anonymous():
-            return redirect( '/')
+        request.context_dict['form'] = UserChangeForm( None, instance=request.user )
 
-        else:
-            return render( request, 'users/profile.html', request.context_dict)
+        return render( request, 'users/profile.html', request.context_dict )
+
+    def post( self, request ):
+        form = UserChangeForm( request.POST, instance=request.user )
+        if form.is_valid():
+            form.save()
+
+            return redirect( '/users/profile' )
+
+        request.context_dict['form'] = form
+
+        return render( request, 'users/profile.html', request.context_dict )
+
 
 class ChangePassword( View ):
     def get( self, request ):
-            user = User.objects.get( id=request.user.id )
-            request.context_dict['form'] = PasswordChangeForm( get_user_model() )
+            request.context_dict['form'] = PasswordChangeForm( user=request.user )
 
             return render( request, 'users/changePassword.html', request.context_dict )
 
     def post( self, request ):
-        form = PasswordChangeForm( get_user_model(), request.POST )
+        form = PasswordChangeForm( user=request.user, data=request.POST )
 
         if form.is_valid():
 
