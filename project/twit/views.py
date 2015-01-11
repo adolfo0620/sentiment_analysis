@@ -38,8 +38,8 @@ class Callback( View ):
         # u.secret = final_step['oauth_token_secret']
         # u.save()
         # request.session['user_id'] = u.id
-        request.session['oauth_token'] = final_step['oauth_token']
-        request.session['oauth_token_secret'] = final_step['oauth_token_secret']
+        # request.session['oauth_token'] = final_step['oauth_token']
+        # request.session['oauth_token_secret'] = final_step['oauth_token_secret']
         
         Twitter_access.objects.create(token=final_step['oauth_token'],secret=final_step['oauth_token_secret'],user=user)
         return redirect( '/twit/eval')
@@ -58,7 +58,7 @@ class Results( View ):
         twitter_access = Twitter_access.objects.get(user=user)
 
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
-        results = twitter.search(q=request.GET['query'], result_type='mixed', count=5000)
+        results = twitter.search(q=request.GET['query'], result_type='mixed', count=100)
         final = Score()
         # saving to db
         # twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
