@@ -1,7 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import View
-
-from sa_api.views import Score
+from sa_api.api import Score
 
 # Create your views here.
 
