@@ -47,7 +47,7 @@ class Eval( View ):
 
 class Results( View ):
     def get(self, request):
-        # u = User.objects.get(pk=request.session['user_id'])
+        u = User.objects.get(pk=request.session['user_id'])
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=100)
         final = Score(results)
