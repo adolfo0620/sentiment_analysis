@@ -1,19 +1,21 @@
 import re, string
+import redis
+r = redis.StrictRedis(host='localhost', port=6379, db=0)
 
 regex = re.compile('[%s]' % re.escape(string.punctuation))
 
-def import_words(file_name):
-    final = set()
-    with open (file_name) as inputfile:
-        for line in inputfile:
-            final.add(line.strip())
-    return final
+# def import_words(file_name):
+#     final = set()
+#     with open (file_name) as inputfile:
+#         for line in inputfile:
+#             final.add(line.strip())
+#     return final
 
 
 class Score():
     def __init__(self):
-        self.positive = import_words('positive-words.txt')
-        self.negative = import_words('negative-words.txt')
+        # self.positive = import_words('positive-words.txt')
+        # self.negative = import_words('negative-words.txt')
         self.pos = 0
         self.neg = 0
 
