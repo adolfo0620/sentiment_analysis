@@ -13,9 +13,15 @@
 	</div>
 
 	<div class="panel-body">
-    Positive score for {{ hashtag }}: {{ pos }}
-    <br>
-    Negative score for {{ hashtag }}: {{ neg }}
+	<p class="well">
+		Total tweets {{ count }}, in English {{ count_en }}
+	</p>
+	<p>
+    	Positive score for {{ hashtag }}: {{ pos }}
+    </p>
+    <p>
+    	Negative score for {{ hashtag }}: {{ neg }}
+    </p>
     <svg id="svg_donut" width="600" height="400"></svg>
 
 	<script type="text/javascript">
