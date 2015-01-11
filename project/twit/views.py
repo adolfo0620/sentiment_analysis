@@ -30,14 +30,6 @@ class Callback( View ):
         final_step = twitter.get_authorized_tokens(oauth_verifier)
         user = User.objects.get(id=request.user.id)
 
-        # if User.objects.filter(username=final_step['screen_name']).exists():
-        #     u = User.objects.get(username=final_step['screen_name'])
-        # else:
-        #     u = User.objects.create(username=final_step['screen_name'])
-        # u.token = final_step['oauth_token']
-        # u.secret = final_step['oauth_token_secret']
-        # u.save()
-        # request.session['user_id'] = u.id
         request.session['oauth_token'] = final_step['oauth_token']
         request.session['oauth_token_secret'] = final_step['oauth_token_secret']
         
@@ -47,14 +39,15 @@ class Callback( View ):
 
 class Eval( View ):
     def get(self, request):
-        print()
         return render ( request, 'twit/evaluate.html', request.context_dict )
 
 
 class Results( View ):
     def get(self, request):
         # u = User.objects.get(pk=request.session['user_id'])
+        print(request.user.id)
         user = User.objects.get(id=request.user.id)
+        print(user.id)
         twitter_access = Twitter_access.objects.get(user=user)
 
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
@@ -66,8 +59,6 @@ class Results( View ):
 
         count_en = 0
         for twits in results['statuses']:
-            if twits['lang'] != 'en':
-                continue
             final.eval( twits['text'] )
             count_en += 1
         
