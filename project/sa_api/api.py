@@ -14,11 +14,17 @@ class Score():
         self.neg = 0
 
     def eval( self, text ):
-        for word in self.positive:
-            if word in text:
-                self.pos += 1
+        to_dict = {}
+        for word in text:
+            if word in to_dict:
+                to_dict[word] += 1
+            else:
+                to_dict[word] = 1
+        for word in self.positive.keys():
+            if word in to_dict:
+                self.pos += to_dict[word]
         for word in self.negative:
-            if word in text:
-                self.neg += 1
+            if word in to_dict:
+                self.neg += to_dict[word]
 
 print(import_words('positive-words.txt'))
