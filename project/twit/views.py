@@ -28,37 +28,29 @@ class Callback( View ):
         oauth_verifier = request.GET['oauth_verifier']
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['OAUTH_TOKEN'], request.session['OAUTH_TOKEN_SECRET'])
         final_step = twitter.get_authorized_tokens(oauth_verifier)
-        user = User.objects.get(id=request.user.id)
 
-        # if User.objects.filter(username=final_step['screen_name']).exists():
-        #     u = User.objects.get(username=final_step['screen_name'])
-        # else:
-        #     u = User.objects.create(username=final_step['screen_name'])
-        # u.token = final_step['oauth_token']
-        # u.secret = final_step['oauth_token_secret']
-        # u.save()
-        # request.session['user_id'] = u.id
         request.session['oauth_token'] = final_step['oauth_token']
         request.session['oauth_token_secret'] = final_step['oauth_token_secret']
         
-        Twitter_access.objects.create(token=final_step['oauth_token'],secret=final_step['oauth_token_secret'],user=user)
+        Twitter_access.objects.create(token=final_step['oauth_token'],
+                                    secret=final_step['oauth_token_secret'],
+                                    user=request.user)
+        
         return redirect( '/twit/eval')
 
 
 class Eval( View ):
     def get(self, request):
-        print()
         return render ( request, 'twit/evaluate.html', request.context_dict )
 
 
 class Results( View ):
     def get(self, request):
         # u = User.objects.get(pk=request.session['user_id'])
-        user = User.objects.get(id=request.user.id)
-        twitter_access = Twitter_access.objects.get(user=user)
+        twitter_access = Twitter_access.objects.get(user=request.user)
 
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
-        results = twitter.search(q=request.GET['query'], result_type='mixed', count=5000)
+        results = twitter.search(q=request.GET['query'], result_type='mixed', count=100,  lang='en')
         final = Score()
         # saving to db
         # twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
@@ -66,15 +58,13 @@ class Results( View ):
 
         count_en = 0
         for twits in results['statuses']:
-            if twits['lang'] != 'en':
-                continue
             final.eval( twits['text'] )
             count_en += 1
         
         Query.objects.create(query_string=request.GET['query'],
                             negative_score=final.neg,
                             positive_score=final.pos,
-                            user=user,
+                            user=request.user,
                             media_platform="Twitter"
                             )
         
