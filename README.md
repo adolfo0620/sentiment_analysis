@@ -1,19 +1,60 @@
-## Apps
+## Setup
 
-1. Sentiment Analysis API
+`git clone https://github.com/himleyb85/sentiment_analysis`
 
-2. Twitter Mod
+`cd sentiment_analysis`
 
-3. Basic text input Mod
+`virutalenv venv`
 
-4. Gmod
+`source venv/bin/activate`
 
-5. Users/UI
+`pip3 install -r requirements.txt`
+
+`createdb twitters`
+
+`sudo su postgres`
+
+You should now be at the postgres user bash prompt
+
+`psql`
+
+You should now be in the psql prompt -> postgres=#
+
+`CREATE ROLE bears WITH login password 'bears';`
+
+`ALTER ROLE bears WITH superuser createdb createrole;`
+
+`\q`
+
+`exit`
+
+To put the negative and positive words into the redis db, start the redis server
+
+`redis-server`
+
+then
+
+`cd project/project`
+
+then 
+
+`python3 pos_neg_redis.py`
+
+Finally, you need to get the app key and app secret and store them in a file you must create in the twit app.  The file must be named keysecret.py, and the contents of the file must be thus:
+
+`secrets = {'APP_KEY':"<app key here>","APP_SECRET":"<app key secret here>"}`
+
+Should be good to go.  To start server,
+
+`python3 manage.py runserver`
+
+then direct your browser to http://127.0.0.1:8000
+
 
 ### API
-accepts block of text
+Accepts block of text, no matter where from
 
-has a positive and negative dictionary, with words as keys and their weight as values
+Uses the lists of positive and negative words from [here](http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon)
 
 ### Twitter
 

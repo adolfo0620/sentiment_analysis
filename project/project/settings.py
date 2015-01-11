@@ -30,6 +30,15 @@ ALLOWED_HOSTS = []
 # SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 # AUTH_USER_MODEL = 'twit.User'
 
+# some day i will get this to work : adolfo
+# caches to use redis
+# CACHES = {
+#     'default': {
+#         'BACKEND': 'redis_cache.RedisCache',
+#         'LOCATION': '/var/run/redis/redis.sock',
+#     },
+# }
+
 # Application definition
 
 INSTALLED_APPS = (
@@ -43,9 +52,11 @@ INSTALLED_APPS = (
     'twit',
     'sa_api',
     'testMod',
+    'Query',
 )
 
 MIDDLEWARE_CLASSES = (
+    'django.middleware.cache.UpdateCacheMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -54,6 +65,7 @@ MIDDLEWARE_CLASSES = (
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'users.middleware.ajax',
+    'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
 ROOT_URLCONF = 'project.urls'
