@@ -56,3 +56,5 @@ target/
 
 #secrets
 keysecret.py
+
+dump.rdb
