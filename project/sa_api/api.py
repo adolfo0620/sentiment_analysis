@@ -1,24 +1,37 @@
-def import_words(file_name):
-    final = set()
-    with open (file_name) as inputfile:
-        for line in inputfile:
-            if line[0] is not ";":
-                final.add(line.strip())
-    return final
+import re, string
+import redis
+
+r = redis.StrictRedis(host='localhost', port=6379, db=0)
+
+regex = re.compile('[%s]' % re.escape(string.punctuation))
 
 class Score():
     def __init__(self):
-        self.positive = import_words('positive-words.txt')
-        self.negative = import_words('negative-words.txt')
         self.pos = 0
         self.neg = 0
 
     def eval( self, text ):
-        for word in self.positive:
-            if word in text:
-                self.pos += 1
-        for word in self.negative:
-            if word in text:
-                self.neg += 1
+        words = text.split(' ')
+        to_dict = {}
+        for word in words:
+            word = regex.sub('', word)            
+            if word in to_dict:
+                to_dict[word] += 1
+            else:
+                to_dict[word] = 1
+        for word in to_dict:
+            if r.sismember('pos', word) == 1:
+                self.pos += to_dict[word]
+        for word in to_dict:
+            if r.sismember('neg', word) == 1:
+                self.neg += to_dict[word]
+        return True
 
-print(import_words('positive-words.txt'))
+
+## Test ###
+# a = Score()
+
+# a.eval("bad bad terrible.. #happy")
+
+# print(a.pos)
+# print(a.neg)
