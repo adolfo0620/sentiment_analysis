@@ -58,7 +58,7 @@ class Results( View ):
         twitter_access = Twitter_access.objects.get(user=user)
 
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
-        results = twitter.search(q=request.GET['query'], result_type='mixed', count=100)
+        results = twitter.search(q=request.GET['query'], result_type='mixed', count=100, lang='en')
         final = Score()
         # saving to db
         # twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
