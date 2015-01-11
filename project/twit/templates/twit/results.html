@@ -27,16 +27,38 @@
 	<script type="text/javascript">
 		// please load all d3 stuff after document ready
 		$( document ).ready( function(){
+			w = 600
+			h = 400 
+			pos = {{pos}}
+			neg = {{neg}}
+			whole = pos + neg
+			pos /= whole
+			neg /= whole
+			neg *= 100
+			pos *= 100 
+			console.log(pos, neg)
+			var cScale = d3.scale.linear().domain([0, 100]).range([0, 2 * Math.PI]);
+			if (pos == 100) {
+				console.log('if')
+				data = [[0,pos,"#AA8888", 'Positive = Purple', 100], [0,0,"#88BB88", 'Negative = Green', 200]]
+			} else {
+				console.log('else')
+				data = [[0,pos,"#AA8888", 'Positive = Purple', 100], [pos,100,"#88BB88", 'Negative = Green', 200]]
+			}
 			//select the svg element
 			var vis = d3.select("#svg_donut");
 			// arc is defining the circle or donut 
 			// innerRadius handles the size of the donut compared to the size of the overall chart
 			// outerRadius handles the overall chart size
 			// startAngle handles at what point does the section start and endAngle is straightforward
-			var arc = d3.svg.arc().innerRadius(50).outerRadius(100).startAngle(5).endAngle(1.5*Math.PI);
+			var arc = d3.svg.arc() .innerRadius(50) .outerRadius(100) .startAngle(function(d){return cScale(d[0]);}) .endAngle(function(d){return cScale(d[1]);});
 			// here is where we catually create the chart
-			vis.append("path") .attr("d", arc) .attr("transform", "translate(300,200)");
+			vis.selectAll("path") .data(data) .enter() .append("path") .attr("d", arc) .style("fill", function(d){return d[2];}) .attr("transform", "translate(300,200)");
+			text = vis.selectAll('text'). data(data) .enter() .append('text');
+			text.text(function(d){return d[3];}) .attr('fill','red') .attr('y', function(d){return d[4];}).attr('x', 80);
+			console.log('ok')
 		} );
+
 	</script>
 	</div>
 

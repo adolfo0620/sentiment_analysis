@@ -47,7 +47,7 @@ class Eval( View ):
 
 class Results( View ):
     def get(self, request):
-        # u = User.objects.get(pk=request.session['user_id'])
+        u = User.objects.get(pk=request.session['user_id'])
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=1000000)
 
@@ -58,8 +58,7 @@ class Results( View ):
             if twits['lang'] != 'en':
                 continue
             final.eval( twits['text'] )
-            count_en += 1
-        
+            count_en += 1        
         request.context_dict['hashtag'] = request.GET['query']
         request.context_dict['pos'] = final.pos
         request.context_dict['neg'] = final.neg
