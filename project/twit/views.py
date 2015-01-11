@@ -58,17 +58,29 @@ class Results( View ):
         twitter_access = Twitter_access.objects.get(user=user)
 
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
-        results = twitter.search(q=request.GET['query'], result_type='mixed', count=100, lang='en')
+        results = twitter.search(q=request.GET['query'], result_type='mixed', count=5000, lang='en')
         final = Score()
+        # print(results['statuses'])
         # saving to db
         # twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
         # results = twitter.search(q=request.GET['query'], result_type='mixed', count=1000000)
 
+        #we should use this next line to weigh sentiment
+        #results['retweet_count']
+
         count_en = 0
+        associated_hashtags = {}
+
         for twits in results['statuses']:
             if twits['lang'] != 'en':
                 continue
             final.eval( twits['text'] )
+            for hashtag in twits['entities']['hashtags']:
+                if hashtag["text"].lower() is not request.GET['query'][1:].lower():
+                    if hashtag['text'] in associated_hashtags:
+                        associated_hashtags[hashtag['text']] += 1
+                    else:
+                        associated_hashtags[hashtag['text']] = 1
             count_en += 1
         
         Query.objects.create(query_string=request.GET['query'],
@@ -83,6 +95,7 @@ class Results( View ):
         request.context_dict['neg'] = final.neg
         request.context_dict['count_en'] = count_en
         request.context_dict['count'] = results['search_metadata']['count']
+        request.context_dict['associated_hashtags'] = associated_hashtags
 
         return render(request, 'twit/results.html', request.context_dict)
 
