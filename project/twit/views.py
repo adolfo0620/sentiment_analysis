@@ -6,6 +6,7 @@ from django.contrib.auth.models import User, AnonymousUser
 from sa_api.api import Score
 from twython import Twython
 from pprint import pprint
+from Query.models import Query
 
 
 class Index( View ):
@@ -45,6 +46,7 @@ class Callback( View ):
 
 class Eval( View ):
     def get(self, request):
+        print()
         return render ( request, 'twit/evaluate.html', request.context_dict )
 
 
@@ -55,10 +57,16 @@ class Results( View ):
         twitter_access = Twitter_access.objects.get(user=user)
 
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
-        results = twitter.search(q=request.GET['query'], result_type='mixed', count=100)
+        results = twitter.search(q=request.GET['query'], result_type='mixed', count=5000)
         final = Score(results)
         final.eval()
-        
+        # saving to db
+        Query.objects.create(query_string=request.GET['query'],
+                            negative_score=final.neg,
+                            positive_score=final.pos,
+                            user=user,
+                            media_platform="Twitter"
+                            )
         request.context_dict['hashtag'] = request.GET['query']
         request.context_dict['pos'] = final.pos
         request.context_dict['neg'] = final.neg

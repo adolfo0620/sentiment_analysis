@@ -52,6 +52,7 @@ INSTALLED_APPS = (
     'twit',
     'sa_api',
     'testMod',
+    'Query',
 )
 
 MIDDLEWARE_CLASSES = (
