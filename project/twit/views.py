@@ -3,6 +3,7 @@ from django.views.generic import View
 from twit.keysecret import secrets
 from twit.models import Twitter_access
 from django.contrib.auth.models import User, AnonymousUser
+
 from sa_api.api import Score
 from twython import Twython
 from pprint import pprint
@@ -55,7 +56,6 @@ class Results( View ):
         # u = User.objects.get(pk=request.session['user_id'])
         user = User.objects.get(id=request.user.id)
         twitter_access = Twitter_access.objects.get(user=user)
-
 
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=5000)

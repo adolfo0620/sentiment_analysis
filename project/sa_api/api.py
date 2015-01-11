@@ -1,11 +1,18 @@
+def import_words(file_name):
+    final = []
+    with open (file_name) as inputfile:
+        for line in inputfile:
+            if line[0] is not ";":
+                final.append(line.strip())
+    return final
 
 class Score():
     def __init__(self):
-        self.positive = ['love','loved','like','liked','awesome','amazing','good','great','excellent', 'nice', 'sweet']
-        self.negative = ['hate','hated','dislike','disliked','awful','terrible','bad','painful','worst', 'disgraceful', 'horrible']
+        self.positive = import_words('positive-words.txt')
+        self.negative = import_words('negative-words.txt')
         self.pos = 0
         self.neg = 0
-    
+
     def eval( self, text ):
         for word in self.positive:
             if word in text:
@@ -13,3 +20,5 @@ class Score():
         for word in self.negative:
             if word in text:
                 self.neg += 1
+
+print(import_words('positive-words.txt'))
