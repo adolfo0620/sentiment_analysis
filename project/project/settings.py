@@ -29,6 +29,13 @@ ALLOWED_HOSTS = []
 # What is this???
 # SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
 # AUTH_USER_MODEL = 'twit.User'
+# caches to use redis
+CACHES = {
+    'default': {
+        'BACKEND': 'redis_cache.RedisCache',
+        'LOCATION': '/var/run/redis/redis.sock',
+    },
+}
 
 # Application definition
 
