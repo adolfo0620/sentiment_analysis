@@ -14,17 +14,26 @@ class Score():
         self.neg = 0
 
     def eval( self, text ):
+        words = text.split(' ')
         to_dict = {}
-        for word in text:
+        for word in words:
             if word in to_dict:
                 to_dict[word] += 1
             else:
                 to_dict[word] = 1
-        for word in self.positive.keys():
-            if word in to_dict:
+        for word in to_dict:
+            if word in self.positive:
                 self.pos += to_dict[word]
-        for word in self.negative:
-            if word in to_dict:
+        for word in to_dict:
+            if word in self.negative:
                 self.neg += to_dict[word]
+        return True
 
-print(import_words('positive-words.txt'))
+
+### Test ###
+# a = Score()
+
+# a.eval("bad bad terrible happy")
+
+# print(a.pos)
+# print(a.neg)
