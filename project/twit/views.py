@@ -56,6 +56,7 @@ class Results( View ):
         user = User.objects.get(id=request.user.id)
         twitter_access = Twitter_access.objects.get(user=user)
 
+
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=5000)
         final = Score(results)
