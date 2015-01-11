@@ -1,17 +1,4 @@
-## Apps
-
-1. Sentiment Analysis API
-
-2. Twitter Mod
-
-3. Basic text input Mod
-
-4. Gmod
-
-5. Users/UI
-
-
-### Setup
+## Setup
 
 `git clone https://github.com/himleyb85/sentiment_analysis`
 
@@ -60,7 +47,7 @@ then direct your browser to http://127.0.0.1:8000
 
 
 ### API
-accepts block of text
+Accepts block of text, no matter where from
 
 Uses the lists of positive and negative words from [here](http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon)
 
