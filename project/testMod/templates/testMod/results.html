@@ -1,0 +1,48 @@
+{% extends base_template %}
+
+{% block title %}Results - {% endblock %}
+
+{% block content %}
+	{% load bootstrap %}
+
+<div class="panel panel-default">
+
+	<div class="panel-heading panel-title">
+		Results 
+	</div>
+
+	<div class="panel-body">
+		<p>
+	    	Positive score: {{ score.pos }}
+	    </p>
+	    <p>
+	    	Negative score: {{ score.neg }}
+	    </p>
+
+	    <p class="well">
+	    	{{ text }}
+	    </p>
+	    <svg id="svg_donut" width="600" height="400"></svg>
+
+		<script type="text/javascript">
+			// please load all d3 stuff after document ready
+			$( document ).ready( function(){
+				//select the svg element
+				var vis = d3.select("#svg_donut");
+				// arc is defining the circle or donut 
+				// innerRadius handles the size of the donut compared to the size of the overall chart
+				// outerRadius handles the overall chart size
+				// startAngle handles at what point does the section start and endAngle is straightforward
+				var arc = d3.svg.arc().innerRadius(50).outerRadius(100).startAngle(5).endAngle(1.5*Math.PI);
+				// here is where we catually create the chart
+				vis.append("path") .attr("d", arc) .attr("transform", "translate(300,200)");
+			} );
+		</script>
+	</div>
+
+	<div class="panel-footer">
+		&nbsp;
+	</div>
+
+</div>
+{% endblock %}
