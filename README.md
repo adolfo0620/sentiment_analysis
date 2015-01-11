@@ -4,11 +4,13 @@
 
 `cd sentiment_analysis`
 
-`virutalenv venv'
+`virutalenv venv`
+
+`source venv/bin/activate`
 
 `pip3 install -r requirements.txt`
 
-`createdb twitters'
+`createdb twitters`
 
 `sudo su postgres`
 
@@ -32,7 +34,7 @@ To put the negative and positive words into the redis db, start the redis server
 
 then
 
-`cd project/`
+`cd project/project`
 
 then 
 
@@ -41,7 +43,7 @@ then
 
 Should be good to go.  To start server,
 
-`python3 manage.py runserver'
+`python3 manage.py runserver`
 
 then direct your browser to http://127.0.0.1:8000
 
