@@ -1,9 +1,9 @@
 def import_words(file_name):
-    final = []
+    final = set()
     with open (file_name) as inputfile:
         for line in inputfile:
             if line[0] is not ";":
-                final.append(line.strip())
+                final.add(line.strip())
     return final
 
 class Score():
