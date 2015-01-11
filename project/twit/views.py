@@ -4,7 +4,7 @@ from twit.keysecret import secrets
 
 from django.contrib.auth.models import User, AnonymousUser
 
-from sa_api.views import Score
+from sa_api.scoring import Score
 
 from twython import Twython
 from pprint import pprint
@@ -47,7 +47,7 @@ class Eval( View ):
 
 class Results( View ):
     def get(self, request):
-        u = User.objects.get(pk=request.session['user_id'])
+        # u = User.objects.get(pk=request.session['user_id'])
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=1000000)
 
