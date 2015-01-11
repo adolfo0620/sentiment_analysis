@@ -13,7 +13,7 @@
 ### API
 accepts block of text
 
-has a positive and negative dictionary, with words as keys and their weight as values
+Uses the lists of positive and negative words from [here](http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon)
 
 ### Twitter
 

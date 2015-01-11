@@ -2,14 +2,13 @@ def import_words(file_name):
     final = set()
     with open (file_name) as inputfile:
         for line in inputfile:
-            if line[0] is not ";":
-                final.add(line.strip())
+            final.add(line.strip())
     return final
 
 class Score():
     def __init__(self):
-        self.positive = import_words('positive-words.txt')
-        self.negative = import_words('negative-words.txt')
+        self.positive = import_words('../sa_api/positive-words.txt')
+        self.negative = import_words('../sa_api/negative-words.txt')
         self.pos = 0
         self.neg = 0
 
