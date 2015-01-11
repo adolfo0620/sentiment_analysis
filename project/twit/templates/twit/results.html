@@ -20,8 +20,20 @@
 	<script type="text/javascript">
 		// please load all d3 stuff after document ready
 		$( document ).ready( function(){
+			pos = 7
+			neg = 3
+			whole = pos + neg
+			pos /= whole
+			neg /= whole
+			neg *= 100
+			pos *= 100 
+			console.log(pos, neg)
 			var cScale = d3.scale.linear().domain([0, 100]).range([0, 2 * Math.PI]);
-			data = [[0,50,"#AA8888"], [50,75,"#88BB88"], [75,100,"#8888CC"]]
+			if (pos == 100) {
+				data = [[0,pos,"#AA8888"], [0,0,"#88BB88"]]
+			} else {
+				data = [[0,pos,"#AA8888"], [pos+1,neg,"#88BB88"]]
+			}
 			//select the svg element
 			var vis = d3.select("#svg_donut");
 			// arc is defining the circle or donut 
