@@ -5,7 +5,7 @@ class reddit_api:
 		if subred == " ":
 			self.url_link = "http://www.reddit.com/.json"
 		else:
-			self.url_link = "http://www.reddit.com/"+ subred +"/.json"
+			self.url_link = "http://www.reddit.com/"+ subred +"/.json?limit=1000"
 		
 		bot = {"User-Agent": "sentiment bot by /u/adolfo0620"}
 		
@@ -22,6 +22,3 @@ class reddit_api:
 			print(subred)
 			print(title)
 		return lposts
-
-
-

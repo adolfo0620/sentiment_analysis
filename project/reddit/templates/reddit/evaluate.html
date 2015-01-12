@@ -31,6 +31,13 @@
 		    	Search
 		    </button>
 		</form>
+		<hr />
+		{% for sub in subs %}
+			<p>
+				<a href="/reddit/eval?query={{ sub.url }}">
+				{{ sub.name }}
+			</p>
+		{% endfor %}
 	</div>
 
 	<div class="panel-footer">
