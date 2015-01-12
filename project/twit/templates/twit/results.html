@@ -14,21 +14,25 @@
 
 	<div class="panel-body">
 	<p class="well">
-		Total tweets {{ count }}
-	</p>
-	<p>
-    	Positive score for {{ hashtag }}: {{ pos }}
-    </p>
-    <p>
-    	Negative score for {{ hashtag }}: {{ neg }}
-    </p>
-    <svg id="svg_donut" width="800" height="600"></svg>
-
+		Total tweets {{ count }}, in English {{ count_en }}
+	</p> 
+    <svg id="svg_donut" width="600" height="400"></svg>
+    <h3>Associated Hashtags & Frequency</h3>
+    <ul class = 'list-group'>
+    {% for k, v in associated_hashtags.items %}
+    	<li class = 'list-group-item'><p>#{{k}} : {{v}}</p></li>
+    {% endfor %}
+	</ul>
+    <!-- {{associated_hashtags}} -->
 	<script type="text/javascript">
 		// please load all d3 stuff after document ready
 		$( document ).ready( function(){
-			w = 800
-			h = 600 
+			{% autoescape off %} 
+			var test = {{ associated_hashtags }};
+			console.log(test)
+			{% endautoescape %}
+			w = 600
+			h = 400 
 			pos = {{pos}}
 			neg = {{neg}}
 			whole = pos + neg
@@ -41,13 +45,13 @@
 			var cScale = d3.scale.linear().domain([0, 100]).range([0, 2 * Math.PI]);
 			if (pos == 100) {
 				console.log('if')
-				data = [[0,pos,"#AA8888", 'Positive', 100], [0,0,"red", 'Negative', 120]]
+				data = [[0,pos,"#AA8888", '{{pos}} Positive', 100, 'pos'], [0,0,"red", '{{neg}} Negative', 120, 'neg']]
 			} else if (!pos){
 				console.log('else if')
-				data = [[0,50,"black", 'Positive', 100], [50,100,"black", 'Negative', 120]]
+				data = [[0,50,"black", '{{pos}} Positive', 100, 'pos'], [50,100,"black", '{{neg}} Negative', 120, 'neg']]
 			} else {
 				console.log('else')
-				data = [[0,pos,"#AA8888", 'Positive', 100], [pos,100,"red", 'Negative', 120]]
+				data = [[0,pos,"#AA8888", '{{pos}} Positive', 100, 'pos'], [pos,100,"red", '{{neg}} Negative', 120, 'neg']]
 			}
 			//select the svg element
 			var vis = d3.select("#svg_donut");
@@ -59,7 +63,7 @@
 			// here is where we catually create the chart
 			vis.selectAll("path") .data(data) .enter() .append("path") .attr("d", arc) .style("fill", function(d){return d[2];}) .attr("transform", "translate(300,200)");
 			text = vis.selectAll('text'). data(data) .enter() .append('text');
-			text.text(function(d){return d[3];}) .style('fill', function(d){return d[2];}) .attr('y', function(d){return d[4];}).attr('x', 80);
+			text.text(function(d){return d[3];}) .style('fill', function(d){return d[2];}) .attr('y', function(d){return d[4];}).attr('x', 80).attr('id', );
 			nodata = vis.selectAll('text'). data([1,2,3]) .enter() .append('svg:text');
 			nodata.text('No Results') .style('fill', 'black') .attr('y', 140).attr('x', 80);
 			var rect = vis.selectAll('rect'). data([[85, '#AA8888'], [105, 'red'], [125, 'black']]) .enter() .append('svg:rect');

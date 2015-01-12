@@ -72,7 +72,8 @@ class Results( View ):
         request.context_dict['hashtag'] = request.GET['query']
         request.context_dict['pos'] = final.pos
         request.context_dict['neg'] = final.neg
-        request.context_dict['count'] = len(results['statuses'])
-        request.context_dict['associated_hashtags'] = json.dumps(associated_hashtags)
+        request.context_dict['count_en'] = count_en
+        request.context_dict['count'] = results['search_metadata']['count']
+        request.context_dict['associated_hashtags'] = associated_hashtags
 
         return render(request, 'twit/results.html', request.context_dict)
