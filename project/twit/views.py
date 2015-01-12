@@ -48,12 +48,13 @@ class Results( View ):
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=100,  lang='en')
         final = Score()
 
-        #we should use this next line to weigh sentiment at some point
+        #we should use these next lines to weigh sentiment at some point
         #results['retweet_count']
+        #results['favourites_count']
 
         count_en = 0
         associated_hashtags = {}
-
+        pprint (results['statuses'][0])
         for twits in results['statuses']:
             final.eval( twits['text'] )
             for hashtag in twits['entities']['hashtags']:
