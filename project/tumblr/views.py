@@ -5,10 +5,8 @@ from tumblpy import Tumblpy
 from tumblr.keysecret import tumsecret
 from django.contrib.auth.models import User, AnonymousUser
 from pprint import pprint
-
 from sa_api.api import Score
 
-# Create your views here.
 
 class Index( View ):
     def get(self, request):

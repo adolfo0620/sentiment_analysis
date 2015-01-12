@@ -1,13 +1,13 @@
-from sa_api.api import Score
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.views.generic import View
 from goog.keysecret import hiddeninfo
+from goog.models import Google_access
+from pprint import pprint as print
+from sa_api.api import Score
 from pyoauth2 import Client
 import requests
 import base64
-from pprint import pprint as print
-from goog.models import Google_access
 
 API_KEY = hiddeninfo["API_KEY"]
 CLIENT_ID = hiddeninfo["Client_ID"]
