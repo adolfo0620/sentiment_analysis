@@ -52,9 +52,9 @@ class Results( View ):
         #results['retweet_count']
         #results['favourites_count']
 
-        count_en = 0
+        pprint(results)
+
         associated_hashtags = {}
-        pprint (results['statuses'][0])
         for twits in results['statuses']:
             final.eval( twits['text'] )
             for hashtag in twits['entities']['hashtags']:
@@ -63,7 +63,6 @@ class Results( View ):
                         associated_hashtags[hashtag['text']] += 1
                     else:
                         associated_hashtags[hashtag['text']] = 1
-            count_en += 1
         
         Query.objects.create(query_string=request.GET['query'],
                             negative_score=final.neg,
@@ -75,8 +74,7 @@ class Results( View ):
         request.context_dict['hashtag'] = request.GET['query']
         request.context_dict['pos'] = final.pos
         request.context_dict['neg'] = final.neg
-        request.context_dict['count_en'] = count_en
-        request.context_dict['count'] = results['search_metadata']['count']
+        request.context_dict['count'] = len(results['statuses'])
         request.context_dict['associated_hashtags'] = json.dumps(associated_hashtags)
 
         return render(request, 'twit/results.html', request.context_dict)
