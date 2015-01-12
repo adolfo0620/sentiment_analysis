@@ -10,5 +10,4 @@ urlpatterns = patterns('',
     url(r'^tumblr/', include('tumblr.urls')),
     url(r'^goog/', include('goog.urls')),
     url(r'^reddit/', include('reddit.urls')),
-    
 )
