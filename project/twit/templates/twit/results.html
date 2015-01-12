@@ -16,17 +16,21 @@
 	<p class="well">
 		Total tweets {{ count }}, in English {{ count_en }}
 	</p>
-	<p>
-    	Positive score for {{ hashtag }}: {{ pos }}
-    </p>
-    <p>
-    	Negative score for {{ hashtag }}: {{ neg }}
-    </p>
     <svg id="svg_donut" width="600" height="400"></svg>
-
+    <h3>Associated Hashtags & Frequency</h3>
+    <ul class = 'list-group'>
+    {% for k, v in associated_hashtags.items %}
+    	<li class = 'list-group-item'><p>#{{k}} : {{v}}</p></li>
+    {% endfor %}
+	</ul>
+    <!-- {{associated_hashtags}} -->
 	<script type="text/javascript">
 		// please load all d3 stuff after document ready
 		$( document ).ready( function(){
+			{% autoescape off %} 
+			var test = {{ associated_hashtags }};
+			console.log(test)
+			{% endautoescape %}
 			w = 600
 			h = 400 
 			pos = {{pos}}
@@ -41,13 +45,13 @@
 			var cScale = d3.scale.linear().domain([0, 100]).range([0, 2 * Math.PI]);
 			if (pos == 100) {
 				console.log('if')
-				data = [[0,pos,"#AA8888", 'Positive', 100], [0,0,"red", 'Negative', 120]]
+				data = [[0,pos,"#AA8888", '{{pos}} Positive', 100], [0,0,"red", '{{neg}} Negative', 120]]
 			} else if (!pos){
 				console.log('else if')
-				data = [[0,50,"black", 'Positive', 100], [50,100,"black", 'Negative', 120]]
+				data = [[0,50,"black", '{{pos}} Positive', 100], [50,100,"black", '{{neg}} Negative', 120]]
 			} else {
 				console.log('else')
-				data = [[0,pos,"#AA8888", 'Positive', 100], [pos,100,"red", 'Negative', 120]]
+				data = [[0,pos,"#AA8888", '{{pos}} Positive', 100], [pos,100,"red", '{{neg}} Negative', 120]]
 			}
 			//select the svg element
 			var vis = d3.select("#svg_donut");
