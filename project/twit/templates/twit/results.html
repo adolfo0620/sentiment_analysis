@@ -64,6 +64,8 @@
 			.style('fill', function(d){
 				return d[2];
 			})
+			.attr('width', 400)
+			.attr('height', 400)
 			.style('border', '3px solid black');
 
 			text = legend.selectAll('text').data(data) .enter() .append('text');
