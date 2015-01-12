@@ -1,3 +1,4 @@
+from sa_api.api import Score
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.views.generic import View
@@ -56,10 +57,11 @@ class Display( View ):
         token = eval(token_info.token)
         token.update({'referer': '127.0.0.1:8000'})
 
-        emails = requests.get('https://www.googleapis.com/gmail/v1/users/me/messages?includeSpamTrash=false&maxResults=50&key=' + API_KEY, headers = token)
+        emails = requests.get('https://www.googleapis.com/gmail/v1/users/me/messages?includeSpamTrash=false&maxResults=30&key=' + API_KEY, headers = token)
         email_json = emails.json()['messages']
         email_html = []
 
+        final = Score()
         for em in email_json:
             reson = requests.get("https://www.googleapis.com/gmail/v1/users/me/messages/" + em['id']  + "?format=full&key=" + API_KEY, headers = token)            
             try:
@@ -69,5 +71,11 @@ class Display( View ):
                     email_html.append(base64.urlsafe_b64decode(incode))
             except:
                 pass
-                
-        return render(request,'goog/display.html')
+        
+        for email in email_html:
+            final.eval(email.decode('utf-8'))
+        
+        request.context_dict['pos'] = final.pos
+        request.context_dict['neg'] = final.neg
+
+        return render(request, 'goog/results.html',request.context_dict)
