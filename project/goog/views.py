@@ -82,7 +82,5 @@ class Display( View ):
         else:
             Google_access.objects.filter(user=request.user).delete()
             return redirect('/goog')
-            request.context_dict['pos'] = 0
-            request.context_dict['neg'] = 0
 
         return render(request, 'goog/results.html',request.context_dict)
