@@ -52,8 +52,6 @@ class Results( View ):
         #results['retweet_count']
         #results['favourites_count']
 
-        pprint(results)
-
         associated_hashtags = {}
         for twits in results['statuses']:
             final.eval( twits['text'] )
