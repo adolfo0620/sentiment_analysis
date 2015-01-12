@@ -5,8 +5,16 @@ from reddit.scraper import reddit_api
 from django.contrib.auth.models import User
 
 class Index( View ):
+    def get(self, request):
+        return render ( request, 'reddit/evaluate.html', request.context_dict )
+
+class Eval( View ):
     def get( self, request ):
-        r = reddit_api()
+
+        subred = request.GET['query']
+        print('here')
+        print(subred)
+        r = reddit_api(subred)
         results = r.get_info()
         score = Score()
         
