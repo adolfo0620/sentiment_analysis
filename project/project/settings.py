@@ -53,6 +53,7 @@ INSTALLED_APPS = (
     'sa_api',
     'testMod',
     'Query',
+    'tumblr',
 )
 
 MIDDLEWARE_CLASSES = (

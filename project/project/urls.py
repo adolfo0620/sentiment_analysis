@@ -7,4 +7,5 @@ urlpatterns = patterns('',
     url(r'^$', include('users.urls')),
     url(r'^users/', include('users.urls')),
     url(r'^testmod/', include('testMod.urls')),
+    url(r'^tumblr/', include('tumblr.urls')),
 )
