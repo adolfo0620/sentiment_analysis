@@ -55,6 +55,7 @@ INSTALLED_APPS = (
     'Query',
     'tumblr',
     'goog',
+    'reddit',
 )
 
 MIDDLEWARE_CLASSES = (
