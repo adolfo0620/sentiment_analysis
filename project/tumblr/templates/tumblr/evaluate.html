@@ -8,12 +8,12 @@
 <div class="panel panel-default">
 
 	<div class="panel-heading panel-title">
-		<i class="fa fa-twitter"></i>
+		<i class="fa fa-tumblr"></i>
 		Evaluate 
 	</div>
 
 	<div class="panel-body">
-		<form name='query' action='/twit/results' method='GET' >
+		<form name='query' action='/tumblr/results' method='GET' >
 		    
 		    <!-- csfr token is not needed/ should not be used for GET requests 
 		    {%csrf_token%}-->
@@ -21,13 +21,21 @@
 		    <div class="form-group">
         
 		        <label class="control-label">
-		        	<h2>Enter a hashtag:</h2>
+		        	<h2>Enter blog url:</h2>
 		        </label>
-		        <input type="text" name="query" value="#" class="form-control" />
+		        <input type="text" name="blog_url" value="engineering.tumblr.com" class="form-control" />
+		    </div>
+
+		    <div class="form-group">
+        
+		        <label class="control-label">
+		        	<h2>Enter tag(optional):</h2>
+		        </label>
+		        <input type="text" name="tag" class="form-control" />
 		    </div>
 		    
 		    <button type="submit" class="btn btn-default">
-		    	<i class="fa fa-twitter"></i>
+		    	<i class="fa fa-tumblr"></i>
 		    	Search
 		    </button>
 		</form>

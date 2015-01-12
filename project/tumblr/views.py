@@ -2,9 +2,11 @@ from django.shortcuts import render, redirect
 from django.views.generic import View
 from tumblr.models import Tumblr_access 
 from tumblpy import Tumblpy
-from project.keysecret import tumsecret
+from tumblr.keysecret import tumsecret
 from django.contrib.auth.models import User, AnonymousUser
+from pprint import pprint
 
+from sa_api.api import Score
 
 # Create your views here.
 
@@ -23,20 +25,39 @@ class Index( View ):
         request.session['OAUTH_TOKEN'] = auth_props['auth_url']
         request.session['OAUTH_TOKEN_SECRET'] = auth_props['oauth_token_secret']
 
-        return redirect( url )
+        t = Tumblpy(
+            app_key=tumsecret['APP_KEY'], 
+            app_secret=tumsecret['APP_SECRET']
+        )
+
+        auth_props = t.get_authentication_tokens( callback_url='http://127.0.0.1:8000/tumblr/callback' )
+
+        request.session['tumblrOauthToken'] = auth_props['oauth_token']
+        request.session['tumblrOauthTokenSecret'] = auth_props['oauth_token_secret']
+
+        auth_url = auth_props['auth_url']
+
+        return redirect( auth_url )
 
 class Callback( View ):
     
     def get(self, request):
-        tum = Tumblpy(tumsecret['APP_KEY'], tumsecret['APP_SECRET'], request.session['OAUTH_TOKEN'], request.session['OAUTH_TOKEN_SECRET'])
+        # print( request.session['tumblrOauthToken'], request.session['tumblrOauthTokenSecret'] )
+        oauth_verifier = request.GET['oauth_verifier']
+        tum = Tumblpy(
+            tumsecret['APP_KEY'],
+            tumsecret['APP_SECRET'],
+            request.session['tumblrOauthToken'],
+            request.session['tumblrOauthTokenSecret']
+        )
         oauth_verifier = request.GET['oauth_verifier']
 
         
         final_step = tum.get_authorized_tokens(oauth_verifier)
 
         
-        request.session['oauth_token'] = final_step['oauth_token']
-        request.session['oauth_token_secret'] = final_step['oauth_token_secret']
+        # request.session['oauth_token'] = final_step['oauth_token']
+        # request.session['oauth_token_secret'] = final_step['oauth_token_secret']
         
         Tumblr_access.objects.create(token=final_step['oauth_token'],
                                     secret=final_step['oauth_token_secret'],
@@ -46,37 +67,41 @@ class Callback( View ):
 
 class Eval( View ):
     def get(self, request):
-    	pass
-        # return render ( request, 'tumblr/evaluate.html', request.context_dict )
+
+        return render ( request, 'tumblr/evaluate.html', request.context_dict )
 
 class Results( View ):
     def get(self, request):
-        # u = User.objects.get(pk=request.session['user_id'])
-        tumblr_access = Tumblr_access.objects.get(user=request.user)
-
-        tum = Tumblpy(tumsecret['APP_KEY'], tumsecret['APP_SECRET'], tumblr_access.token, tumblr_access.secret)
         
-        final = Score()
-        # saving to db
-        # twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
-        # results = twitter.search(q=request.GET['query'], result_type='mixed', count=1000000)
+        blog_url = request.GET.get( 'blog_url', '' ) #'engineering.tumblr.com'
+        tag = request.GET.get( 'tag', '' )
 
-        count_en = 0
-        for twits in results['statuses']:
-            final.eval( twits['text'] )
-            count_en += 1
-        
-        Query.objects.create(query_string=request.GET['query'],
-                            negative_score=final.neg,
-                            positive_score=final.pos,
-                            user=request.user,
-                            media_platform="Twitter"
-                            )
-        
-        request.context_dict['hashtag'] = request.GET['query']
-        request.context_dict['pos'] = final.pos
-        request.context_dict['neg'] = final.neg
-        request.context_dict['count_en'] = count_en
-        request.context_dict['count'] = results['search_metadata']['count']
+        tumblr_access = Tumblr_access.objects.get( user=request.user )
 
-        return render(request, 'twit/results.html', request.context_dict)
+        tumblr = Tumblpy(
+            tumsecret['APP_KEY'],
+            tumsecret['APP_SECRET'],
+            tumblr_access.token,
+            tumblr_access.secret
+        )
+        
+        tumblr = tumblr.get( 
+            'posts',
+            blog_url=blog_url,
+            params={
+                'type': 'text',
+                'filter': 'text',
+                'tag': tag
+            }
+        )
+
+        score = Score()
+        for posts in tumblr['posts']:
+            score.eval( posts['body'] )
+
+        request.context_dict['blog_url'] = blog_url
+        request.context_dict['tag'] = tag
+        request.context_dict['pos'] = score.pos
+        request.context_dict['neg'] = score.neg
+
+        return render( request, 'tumblr/results.html', request.context_dict )

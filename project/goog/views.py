@@ -2,7 +2,7 @@ from sa_api.api import Score
 from django.shortcuts import render, redirect
 from django.contrib.auth import login
 from django.views.generic import View
-from project.keysecret import hiddeninfo
+from goog.keysecret import hiddeninfo
 from pyoauth2 import Client
 import requests
 import base64
