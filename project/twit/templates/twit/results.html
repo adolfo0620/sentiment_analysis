@@ -27,18 +27,12 @@
 	<script type="text/javascript">
 		// please load all d3 stuff after document ready
 		$( document ).ready( function(){
-			{% autoescape off %} 
-			var test = {{ associated_hashtags }};
-			console.log(test)
-			{% endautoescape %}
 			w = 600
 			h = 400 
 			pos = {{pos}}
 			neg = {{neg}}
 			whole = pos + neg
 			pos /= whole
-			console.log(pos)
-			console.log(pos===NaN)
 			neg /= whole
 			neg *= 100
 			pos *= 100 
@@ -48,7 +42,7 @@
 				data = [[0,pos,"#AA8888", '{{pos}} Positive', 100, 'pos'], [0,0,"red", '{{neg}} Negative', 120, 'neg']]
 			} else if (!pos){
 				console.log('else if')
-				data = [[0,50,"black", '{{pos}} Positive', 100, 'pos'], [50,100,"black", '{{neg}} Negative', 120, 'neg']]
+				data = [[0,50,"black", '{{pos}} Positive', 100, 'nothing'], [50,100,"black", '{{neg}} Negative', 120, 'nothing']]
 			} else {
 				console.log('else')
 				data = [[0,pos,"#AA8888", '{{pos}} Positive', 100, 'pos'], [pos,100,"red", '{{neg}} Negative', 120, 'neg']]
@@ -61,12 +55,16 @@
 			// startAngle handles at what point does the section start and endAngle is straightforward
 			var arc = d3.svg.arc() .innerRadius(50) .outerRadius(100) .startAngle(function(d){return cScale(d[0]);}) .endAngle(function(d){return cScale(d[1]);});
 			// here is where we catually create the chart
-			vis.selectAll("path") .data(data) .enter() .append("path") .attr("d", arc) .style("fill", function(d){return d[2];}) .attr("transform", "translate(300,200)");
+			vis.selectAll("path") .data(data) .enter() .append("path") .attr("d", arc) .style("fill", function(d){return d[2];}) .attr("transform", "translate(300,200)").attr('class', function(d){return d[5]});
 			text = vis.selectAll('text'). data(data) .enter() .append('text');
-			text.text(function(d){return d[3];}) .style('fill', function(d){return d[2];}) .attr('y', function(d){return d[4];}).attr('x', 80).attr('id', );
+			text.text(function(d){return d[3];}) .style('fill', function(d){return d[2];}) .attr('y', function(d){return d[4];}).attr('x', 80);
 			nodata = vis.selectAll('text'). data([1,2,3]) .enter() .append('svg:text');
 			nodata.text('No Results') .style('fill', 'black') .attr('y', 140).attr('x', 80);
-			var rect = vis.selectAll('rect'). data([[85, '#AA8888'], [105, 'red'], [125, 'black']]) .enter() .append('svg:rect');
+			var rect = vis.selectAll('rect'). data([[85, '#AA8888', 'pos'], [105, 'red', 'neg'], [125, 'black', 'nothing']]) .enter() .append('svg:rect').on('click', function(d){
+				console.log(d);
+				d3.selectAll('.'+ d[2]).style("fill", "blue");
+			}
+				);
 			rect.style('fill', function(d){return d[1];}) .attr('y', function(d){return d[0];}).attr('x', 150) .attr('width', 20).attr
 			('height', 20);
 			console.log('ok')
