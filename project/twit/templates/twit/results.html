@@ -14,7 +14,7 @@
 
 	<div class="panel-body">
 	<p class="well">
-		Total tweets {{ count }}, in English {{ count_en }}
+		Total tweets: {{ count }}
 	</p> 
     <svg id="svg_donut" width="600" height="400"></svg>
     <h3>Associated Hashtags & Frequency</h3>
@@ -39,13 +39,13 @@
 			var cScale = d3.scale.linear().domain([0, 100]).range([0, 2 * Math.PI]);
 			if (pos == 100) {
 				console.log('if')
-				data = [[0,pos,"#AA8888", '{{pos}} Positive', 100, 'pos'], [0,0,"red", '{{neg}} Negative', 120, 'neg']]
+				data = [[0,pos,"#AA8888", 'Positive', 100], [0,0,"red", 'Negative', 120]]
 			} else if (!pos){
 				console.log('else if')
 				data = [[0,50,"black", '{{pos}} Positive', 100, 'nothing'], [50,100,"black", '{{neg}} Negative', 120, 'nothing']]
 			} else {
 				console.log('else')
-				data = [[0,pos,"#AA8888", '{{pos}} Positive', 100, 'pos'], [pos,100,"red", '{{neg}} Negative', 120, 'neg']]
+				data = [[0,pos,"#AA8888", 'Positive', 100], [pos,100,"red", 'Negative', 120]]
 			}
 			//select the svg element
 			var vis = d3.select("#svg_donut");
