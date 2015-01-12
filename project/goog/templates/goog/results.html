@@ -38,13 +38,13 @@
 			var cScale = d3.scale.linear().domain([0, 100]).range([0, 2 * Math.PI]);
 			if (pos == 100) {
 				console.log('if')
-				data = [[0,pos,"#AA8888", 'Positive = Purple', 100], [0,0,"red", 'Negative = Red', 120]]
+				data = [[0,pos,"#AA8888", 'Positive', 100], [0,0,"red", 'Negative', 120]]
 			} else if (!pos){
 				console.log('else if')
-				data = [[0,50,"black", 'Positive = Purple', 100], [50,100,"black", 'Negative = Red', 120]]
+				data = [[0,50,"black", 'Positive', 100], [50,100,"black", 'Negative', 120]]
 			} else {
 				console.log('else')
-				data = [[0,pos,"#AA8888", 'Positive = Purple', 100], [pos,100,"red", 'Negative = Red', 120]]
+				data = [[0,pos,"#AA8888", 'Positive', 100], [pos,100,"red", 'Negative', 120]]
 			}
 			//select the svg element
 			var vis = d3.select("#svg_donut");
@@ -58,7 +58,10 @@
 			text = vis.selectAll('text'). data(data) .enter() .append('text');
 			text.text(function(d){return d[3];}) .style('fill', function(d){return d[2];}) .attr('y', function(d){return d[4];}).attr('x', 80);
 			nodata = vis.selectAll('text'). data([1,2,3]) .enter() .append('svg:text');
-			nodata.text('Black = No Results') .style('fill', 'black') .attr('y', 140).attr('x', 80);
+			nodata.text('No Results') .style('fill', 'black') .attr('y', 140).attr('x', 80);
+			var rect = vis.selectAll('rect'). data([[85, '#AA8888'], [105, 'red'], [125, 'black']]) .enter() .append('svg:rect');
+			rect.style('fill', function(d){return d[1];}) .attr('y', function(d){return d[0];}).attr('x', 150) .attr('width', 20).attr
+			('height', 20);
 			console.log('ok')
 		} );
 
