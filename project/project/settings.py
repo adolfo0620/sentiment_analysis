@@ -54,6 +54,7 @@ INSTALLED_APPS = (
     'testMod',
     'Query',
     'tumblr',
+    'facebook',
 )
 
 MIDDLEWARE_CLASSES = (

@@ -15,10 +15,11 @@ class Index( View ):
             return redirect('/tumblr/eval')
         
         tum = Tumblpy(tumsecret['APP_KEY'], tumsecret['APP_SECRET'])
-        auth_props = tum.get_authentication_tokens(callback_url='http://127.0.0.1:8000/tumblr/callback')
-        print('wtf')
+        auth_props = tum.get_authentication_tokens(callback_url='http://127.0.0.1:8000/tumblr/callback/')
         url = auth_props['auth_url']
-        
+
+        OAUTH_TOKEN_SECRET = auth_props['oauth_token_secret']
+
         request.session['OAUTH_TOKEN'] = auth_props['auth_url']
         request.session['OAUTH_TOKEN_SECRET'] = auth_props['oauth_token_secret']
 
