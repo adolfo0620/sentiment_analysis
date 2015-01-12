@@ -1,25 +1,27 @@
 import requests
 
 class reddit_api:
-	def __init__(self):
+	def __init__(self,subred):
+		if subred == " ":
+			self.url_link = "http://www.reddit.com/.json"
+		else:
+			self.url_link = "http://www.reddit.com/"+ subred +"/.json"
+		
 		bot = {"User-Agent": "sentiment bot by /u/adolfo0620"}
-		self.url_link = "http://www.reddit.com/.json"
+		
 		self.json = (requests.get(self.url_link,headers=bot)).json()
 
 	def get_info(self):
 		lposts = []
 		list_of_post = self.json["data"]["children"]
 		for post in list_of_post:
-			author = post["data"]['author']
 			subred = post["data"]['subreddit']
 			title = post["data"]['title']
 			ups = post["data"]['ups']
-			url = post["data"]['url']
-			created = post["data"]['created']
 			lposts.append(subred +" "+title)
+			print(subred)
+			print(title)
 		return lposts
 
 
 
-r = reddit_api()
-r.get_info()
