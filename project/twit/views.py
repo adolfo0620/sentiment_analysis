@@ -3,11 +3,11 @@ from django.views.generic import View
 from twit.keysecret import secrets
 from twit.models import Twitter_access
 from django.contrib.auth.models import User, AnonymousUser
-
 from sa_api.api import Score
 from twython import Twython
 from pprint import pprint
 from Query.models import Query
+import json
 
 
 class Index( View ):
@@ -76,8 +76,7 @@ class Results( View ):
         request.context_dict['neg'] = final.neg
         request.context_dict['count_en'] = count_en
         request.context_dict['count'] = results['search_metadata']['count']
-        request.context_dict['associated_hashtags'] = associated_hashtags
+        request.context_dict['associated_hashtags'] = json.dumps(associated_hashtags)
+        print(request.context_dict['associated_hashtags'])
 
         return render(request, 'twit/results.html', request.context_dict)
-
-       
