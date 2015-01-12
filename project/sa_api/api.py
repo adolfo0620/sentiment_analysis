@@ -22,8 +22,7 @@ class Score():
         for word in to_dict:
             if r.sismember('pos', word) == 1:
                 self.pos += to_dict[word]
-        for word in to_dict:
-            if r.sismember('neg', word) == 1:
+            elif r.sismember('neg', word) == 1:
                 self.neg += to_dict[word]
         return True
 
