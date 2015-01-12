@@ -2,12 +2,12 @@ import requests
 
 class reddit_api:
 	def __init__(self):
+		bot = {"User-Agent": "sentiment bot by /u/adolfo0620"}
 		self.url_link = "http://www.reddit.com/.json"
-		self.json = (requests.get(self.url_link)).json()
+		self.json = (requests.get(self.url_link,headers=bot)).json()
 
 	def get_info(self):
 		lposts = []
-		print(self.json)
 		list_of_post = self.json["data"]["children"]
 		for post in list_of_post:
 			author = post["data"]['author']
