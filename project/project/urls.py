@@ -9,5 +9,5 @@ urlpatterns = patterns('',
     url(r'^testmod/', include('testMod.urls')),
     url(r'^tumblr/', include('tumblr.urls')),
     url(r'^goog/', include('goog.urls')),
-    url(r'^facebook/', include('facebook.urls')),
+    
 )

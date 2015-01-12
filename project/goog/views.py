@@ -3,10 +3,10 @@ from django.contrib.auth import login
 from django.views.generic import View
 from project.keysecret import hiddeninfo
 from pyoauth2 import Client
-from goog.models import User
 import requests
 import base64
 from pprint import pprint as print
+from goog.models import Google_access
 
 API_KEY = hiddeninfo["API_KEY"]
 CLIENT_ID = hiddeninfo["Client_ID"]
@@ -21,7 +21,9 @@ SCOPE = [ 'profile',
           'https://www.googleapis.com/auth/plus.me',
           'https://www.googleapis.com/auth/gmail.compose',
           'https://www.googleapis.com/auth/gmail.readonly',
-          'https://mail.google.com/',]
+          'https://mail.google.com/',
+          ]
+
 SCOPE = ' '.join(SCOPE)
 client = Client(CLIENT_ID, CLIENT_SECRET,
                 site='https://www.googleapis.com/oauth2/v1',
@@ -31,7 +33,7 @@ client = Client(CLIENT_ID, CLIENT_SECRET,
 
 class Index( View ):
     def get(self, request):
-        if 'user_id' in request.session:
+        if Google_access.objects.filter(user=request.user).exists():
             return redirect( '/goog/display')
         else:
             authorize_url = client.auth_code.authorize_url(redirect_uri=REDIRECT_URL, scope=SCOPE)
@@ -44,21 +46,22 @@ class Callback( View ):
         access_token = client.auth_code.get_token(code, redirect_uri=REDIRECT_URL)
         ret = access_token.get('/userinfo')
         info = ret.parsed
-        u = User.objects.create(last_name=info['family_name'], username=info['email'], token= str(access_token.headers))
-        request.session["user_id"] = u.id
-        return redirect ('/goog/display')
+        Google_access.objects.create(user=request.user,token= str(access_token.headers),secret="none")
+        return redirect('/goog/display')
 
 
 class Display( View ):
     def get(self, request):
-        u = User.objects.get(id=request.session["user_id"])
-        token = eval(u.token)
+        token_info = Google_access.objects.get(user=request.user)
+        token = eval(token_info.token)
         token.update({'referer': '127.0.0.1:8000'})
+
         emails = requests.get('https://www.googleapis.com/gmail/v1/users/me/messages?includeSpamTrash=false&maxResults=50&key=' + API_KEY, headers = token)
         email_json = emails.json()['messages']
         email_html = []
+
         for em in email_json:
-            reson = requests.get("https://www.googleapis.com/gmail/v1/users/me/messages/" +em['id']  + "?format=full&key=" + API_KEY, headers = token)            
+            reson = requests.get("https://www.googleapis.com/gmail/v1/users/me/messages/" + em['id']  + "?format=full&key=" + API_KEY, headers = token)            
             try:
                 emails = reson.json()['payload']['parts']
                 for email in emails:
@@ -66,4 +69,5 @@ class Display( View ):
                     email_html.append(base64.urlsafe_b64decode(incode))
             except:
                 pass
-        return render(request,'goog/display.html', {'name':u.last_name, "emails":email_html})
+                
+        return render(request,'goog/display.html')
