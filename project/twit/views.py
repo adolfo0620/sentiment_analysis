@@ -12,8 +12,7 @@ from Query.models import Query
 
 class Index( View ):
     def get(self, request):
-        user = User.objects.get(id=request.user.id)
-        if Twitter_access.objects.filter(user=user).exists():
+        if Twitter_access.objects.filter(user=request.user.id).exists():
             return redirect('/twit/eval')
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'])
         auth = twitter.get_authentication_tokens(callback_url='http://127.0.0.1:8000/twit/callback')
@@ -29,18 +28,6 @@ class Callback( View ):
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['OAUTH_TOKEN'], request.session['OAUTH_TOKEN_SECRET'])
         final_step = twitter.get_authorized_tokens(oauth_verifier)
 
-        # if User.objects.filter(username=final_step['screen_name']).exists():
-        #     u = User.objects.get(username=final_step['screen_name'])
-        # else:
-        #     u = User.objects.create(username=final_step['screen_name'])
-        # u.token = final_step['oauth_token']
-        # u.secret = final_step['oauth_token_secret']
-        # u.save()
-        # request.session['user_id'] = u.id
-        # request.session['oauth_token'] = final_step['oauth_token']
-        # request.session['oauth_token_secret'] = final_step['oauth_token_secret']
-
-        
         Twitter_access.objects.create(token=final_step['oauth_token'],
                                     secret=final_step['oauth_token_secret'],
                                     user=request.user)
@@ -55,18 +42,13 @@ class Eval( View ):
 
 class Results( View ):
     def get(self, request):
-        # u = User.objects.get(pk=request.session['user_id'])
         twitter_access = Twitter_access.objects.get(user=request.user)
 
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], twitter_access.token, twitter_access.secret)
         results = twitter.search(q=request.GET['query'], result_type='mixed', count=100,  lang='en')
         final = Score()
-        # print(results['statuses'])
-        # saving to db
-        # twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'], request.session['oauth_token'], request.session['oauth_token_secret'])
-        # results = twitter.search(q=request.GET['query'], result_type='mixed', count=1000000)
 
-        #we should use this next line to weigh sentiment
+        #we should use this next line to weigh sentiment at some point
         #results['retweet_count']
 
         count_en = 0
