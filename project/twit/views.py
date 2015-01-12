@@ -12,8 +12,7 @@ from Query.models import Query
 
 class Index( View ):
     def get(self, request):
-        user = User.objects.get(id=request.user.id)
-        if Twitter_access.objects.filter(user=user).exists():
+        if Twitter_access.objects.filter(user=request.user.id).exists():
             return redirect('/twit/eval')
         twitter = Twython(secrets['APP_KEY'], secrets['APP_SECRET'])
         auth = twitter.get_authentication_tokens(callback_url='http://127.0.0.1:8000/twit/callback')

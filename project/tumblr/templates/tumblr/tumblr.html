@@ -1,0 +1,16 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+</head>
+<body>
+<form name='tweet' action='/twit/tweet' method='POST' >
+    What do you want to tweet?<br>
+    {%csrf_token%}
+    <input type="text" name="tweet">
+    <input type="submit" value="tweet">
+</form>
+<br>
+<a href="/twit/eval">Or Evaluate Tweets</a>
+</body>
+</html>
