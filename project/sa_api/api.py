@@ -14,7 +14,7 @@ class Score():
         words = text.split(' ')
         to_dict = {}
         for word in words:
-            word = regex.sub('', word)            
+            word = regex.sub('', word).lower()       
             if word in to_dict:
                 to_dict[word] += 1
             else:
