@@ -58,24 +58,29 @@ class Display( View ):
         token.update({'referer': '127.0.0.1:8000'})
 
         emails = requests.get('https://www.googleapis.com/gmail/v1/users/me/messages?includeSpamTrash=false&maxResults=30&key=' + API_KEY, headers = token)
-        email_json = emails.json()['messages']
-        email_html = []
+        if 'messages' in emails.json():
+            email_json = emails.json()['messages']
+        
+            email_html = []
 
-        final = Score()
-        for em in email_json:
-            reson = requests.get("https://www.googleapis.com/gmail/v1/users/me/messages/" + em['id']  + "?format=full&key=" + API_KEY, headers = token)            
-            try:
-                emails = reson.json()['payload']['parts']
-                for email in emails:
-                    incode = email['body']['data']
-                    email_html.append(base64.urlsafe_b64decode(incode))
-            except:
-                pass
-        
-        for email in email_html:
-            final.eval(email.decode('utf-8'))
-        
-        request.context_dict['pos'] = final.pos
-        request.context_dict['neg'] = final.neg
+            final = Score()
+            for em in email_json:
+                reson = requests.get("https://www.googleapis.com/gmail/v1/users/me/messages/" + em['id']  + "?format=full&key=" + API_KEY, headers = token)            
+                try:
+                    emails = reson.json()['payload']['parts']
+                    for email in emails:
+                        incode = email['body']['data']
+                        email_html.append(base64.urlsafe_b64decode(incode))
+                except:
+                    pass
+            
+            for email in email_html:
+                final.eval(email.decode('utf-8'))
+            
+            request.context_dict['pos'] = final.pos
+            request.context_dict['neg'] = final.neg
+        else:
+            Google_access.objects.filter(user=request.user).delete()
+            return redirect('/goog')
 
         return render(request, 'goog/results.html',request.context_dict)
