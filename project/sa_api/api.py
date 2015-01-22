@@ -26,11 +26,10 @@ class Score():
                 self.neg += to_dict[word]
         return True
 
+if __name__ == "__main__":
+    a = Score()
 
-## Test ###
-# a = Score()
+    a.eval("bad bad terrible.. #happy")
 
-# a.eval("bad bad terrible.. #happy")
-
-# print(a.pos)
-# print(a.neg)
+    print(a.pos)
+    print(a.neg)
