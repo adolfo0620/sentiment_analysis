@@ -5,9 +5,12 @@ from goog.models import Google_access
 from pprint import pprint as print
 from sa_api.api import Score
 from pyoauth2 import Client
-from os import environ
 import requests
 import base64
+
+# from goog.keysecret import hiddeninfo
+
+from os import environ
 import ast
 
 hiddeninfo = environ.get('GOOG_SECRET')

@@ -6,9 +6,12 @@ from Query.models import Query
 from sa_api.api import Score
 from twython import Twython
 from pprint import pprint
-from os import environ
 import json
+
+# from twit.keysecret import secrets
+
 import ast
+from os import environ
 
 secrets = environ.get('TWIT_SECRET')
 secrets = ast.literal_eval(secrets)

@@ -5,6 +5,9 @@ from django.views.generic import View
 from sa_api.api import Score
 from tumblpy import Tumblpy
 from pprint import pprint
+
+# from tumblr.keysecret import tumsecret
+
 from os import environ
 import ast
 
