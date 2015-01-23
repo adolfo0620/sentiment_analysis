@@ -8,14 +8,14 @@ from twython import Twython
 from pprint import pprint
 import json
 
-from twit.keysecret import secrets
+# from twit.keysecret import secrets
 
 #don't delete these lines, they're for production
-# import ast
-# from os import environ
+import ast
+from os import environ
 
-# secrets = environ.get('TWIT_SECRET')
-# secrets = ast.literal_eval(secrets)
+secrets = environ.get('TWIT_SECRET')
+secrets = ast.literal_eval(secrets)
 
 class Index( View ):
     def get(self, request):
