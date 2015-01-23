@@ -40,6 +40,8 @@ then
 
 `python3 pos_neg_redis.py`
 
+Put the app secret key and the databases information in a file named "local_settings" in your settings folder
+
 Finally, you need to get the app key and app secret and store them in a file you must create in the twit app.  The file must be named keysecret.py, and the contents of the file must be thus:
 
 `secrets = {'APP_KEY':"<app key here>","APP_SECRET":"<app key secret here>"}`

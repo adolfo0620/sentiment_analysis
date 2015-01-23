@@ -16,19 +16,12 @@ BASE_DIR = os.path.dirname(os.path.dirname(__file__))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/1.7/howto/deployment/checklist/
 
-# SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = '@lqfvi(wlf-t_l445a(3lp6!ow2)t4ryrq8x56=z68pdjnte0!'
-
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 TEMPLATE_DEBUG = True
 
 ALLOWED_HOSTS = []
-
-# What is this???
-# SESSION_ENGINE = "django.contrib.sessions.backends.signed_cookies"
-# AUTH_USER_MODEL = 'twit.User'
 
 # some day i will get this to work : adolfo
 # caches to use redis
@@ -76,20 +69,6 @@ ROOT_URLCONF = 'project.urls'
 WSGI_APPLICATION = 'project.wsgi.application'
 
 
-# Database
-# https://docs.djangoproject.com/en/1.7/ref/settings/#databases
-
-DATABASES = {
-        'default': {
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'twitters',
-        'USER': 'bears',
-        'PASSWORD': 'bears',
-        'HOST': '127.0.0.1',
-        'PORT': '5432',
-        }
-    }
-
 # Internationalization
 # https://docs.djangoproject.com/en/1.7/topics/i18n/
 
@@ -113,3 +92,11 @@ STATIC_URL = '/static/'
 ## login url
 
 LOGIN_URL = '/users/login'
+
+try:
+    from .local_settings import *
+except ImportError:
+    import sys, traceback
+    sys.stderr.write("Warning: Can't find the file 'local_settings.py' in the directory containing {}. It appears you've customized things.\nYou'll have to run django-admin.py, passing it your settings module.\n(If the file settings.py does indeed exist, it's causing an ImportError somehow.)\n".format(__file__))
+    sys.stderr.write("\nFor debugging purposes, the exception was:\n\n")
+    traceback.print_exc()
