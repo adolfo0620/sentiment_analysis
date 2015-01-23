@@ -21,7 +21,7 @@ INSTALLED_APPS = (
     'reddit',
 )
 
-MIDDLEWARE_CLASSES = DEFAULT_MIDDLEWARE_CLASSES + (
+MIDDLEWARE_CLASSES = (
     'django.middleware.cache.UpdateCacheMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',

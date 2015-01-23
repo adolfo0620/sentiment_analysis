@@ -2,13 +2,19 @@ from django.contrib.auth.models import User, AnonymousUser
 from django.shortcuts import render, redirect
 from twit.models import Twitter_access
 from django.views.generic import View
-from twit.keysecret import secrets
 from Query.models import Query
 from sa_api.api import Score
 from twython import Twython
 from pprint import pprint
 import json
 
+# from twit.keysecret import secrets
+
+import ast
+from os import environ
+
+secrets = environ.get('TWIT_SECRET')
+secrets = ast.literal_eval(secrets)
 
 class Index( View ):
     def get(self, request):
