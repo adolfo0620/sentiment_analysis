@@ -21,7 +21,7 @@ INSTALLED_APPS = (
     'reddit',
 )
 
-MIDDLEWARE_CLASSES = DEFAULT_MIDDLEWARE_CLASSES + (
+MIDDLEWARE_CLASSES = (
     'django.middleware.cache.UpdateCacheMiddleware', 
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -34,9 +34,9 @@ MIDDLEWARE_CLASSES = DEFAULT_MIDDLEWARE_CLASSES + (
     'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
-ROOT_URLCONF = 'project.urls'
+ROOT_URLCONF = 'bytesenti.urls'
 
-WSGI_APPLICATION = 'project.wsgi.application'
+WSGI_APPLICATION = 'bytesenti.wsgi.application'
 
 
 # Internationalization
@@ -62,6 +62,7 @@ SECRET_KEY = environ.get('SECRET_KEY')
 
 # Parse database configuration from $DATABASE_URL
 import dj_database_url
+DATABASES = {}
 DATABASES['default'] =  dj_database_url.config()
 
 # Honor the 'X-Forwarded-Proto' header for request.is_secure()
