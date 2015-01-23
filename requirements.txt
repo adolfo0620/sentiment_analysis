@@ -4,10 +4,7 @@ dj-static==0.0.6
 django-redis-cache==0.13.0
 django-toolbelt==0.0.1
 gunicorn==19.1.1
-oauthlib==0.7.2
-psycopg2==2.5.4
-py-oauth2==0.0.10
-pyoauth2==0.0.4
+
 redis==2.10.3
 requests==2.5.1
 requests-oauthlib==0.4.2
