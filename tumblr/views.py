@@ -1,11 +1,15 @@
-from django.shortcuts import render, redirect 
-from django.views.generic import View
-from tumblr.models import Tumblr_access 
-from tumblpy import Tumblpy
-from tumblr.keysecret import tumsecret
 from django.contrib.auth.models import User, AnonymousUser
-from pprint import pprint
+from django.shortcuts import render, redirect 
+from tumblr.models import Tumblr_access 
+from django.views.generic import View
 from sa_api.api import Score
+from tumblpy import Tumblpy
+from pprint import pprint
+from os import environ
+import ast
+
+tumsecret = environ.get('TUM_SECRET')
+tumsecret = ast.literal_eval(tumsecret)
 
 
 class Index( View ):
