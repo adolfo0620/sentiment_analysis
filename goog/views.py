@@ -8,13 +8,15 @@ from pyoauth2 import Client
 import requests
 import base64
 
-# from goog.keysecret import hiddeninfo
+from goog.keysecret import hiddeninfo
 
-from os import environ
-import ast
+#don't delete these lines, they're for production
 
-hiddeninfo = environ.get('GOOG_SECRET')
-hiddeninfo = ast.literal_eval(hiddeninfo)
+# from os import environ
+# import ast
+
+# hiddeninfo = environ.get('GOOG_SECRET')
+# hiddeninfo = ast.literal_eval(hiddeninfo)
 
 API_KEY = hiddeninfo["API_KEY"]
 CLIENT_ID = hiddeninfo["Client_ID"]
