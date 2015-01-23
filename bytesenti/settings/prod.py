@@ -34,9 +34,9 @@ MIDDLEWARE_CLASSES = DEFAULT_MIDDLEWARE_CLASSES + (
     'django.middleware.cache.FetchFromCacheMiddleware',
 )
 
-ROOT_URLCONF = 'project.urls'
+ROOT_URLCONF = 'bytesenti.urls'
 
-WSGI_APPLICATION = 'project.wsgi.application'
+WSGI_APPLICATION = 'bytesenti.wsgi.application'
 
 
 # Internationalization
