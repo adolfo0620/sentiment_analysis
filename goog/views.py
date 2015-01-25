@@ -1,13 +1,12 @@
 from django.shortcuts import render, redirect
+from requests_oauthlib import OAuth2Session
 from django.contrib.auth import login
 from django.views.generic import View
 from goog.models import Google_access
 from pprint import pprint as print
 from sa_api.api import Score
-from pyoauth2 import Client
 import requests
 import base64
-
 # from goog.keysecret import hiddeninfo
 
 #don't delete these lines, they're for production
@@ -21,7 +20,7 @@ hiddeninfo = ast.literal_eval(hiddeninfo)
 API_KEY = hiddeninfo["API_KEY"]
 CLIENT_ID = hiddeninfo["Client_ID"]
 CLIENT_SECRET = hiddeninfo["Client_Secret"] 
-REDIRECT_URL = 'http://127.0.0.1:8000/goog/callback'
+REDIRECT_URL = ' http://bytesenti.herokuapp.com/goog/callback'
 
 SCOPE = [ 'profile', 
           'https://www.googleapis.com/auth/plus.login',
@@ -35,7 +34,7 @@ SCOPE = [ 'profile',
           ]
 
 SCOPE = ' '.join(SCOPE)
-client = Client(CLIENT_ID, CLIENT_SECRET,
+client = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
                 site='https://www.googleapis.com/oauth2/v1',
                 authorize_url='https://accounts.google.com/o/oauth2/auth',
                 token_url='https://accounts.google.com/o/oauth2/token')
