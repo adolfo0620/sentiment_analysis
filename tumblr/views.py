@@ -6,14 +6,14 @@ from sa_api.api import Score
 from tumblpy import Tumblpy
 from pprint import pprint
 
-# from tumblr.keysecret import tumsecret
+from tumblr.keysecret import tumsecret
 
 #don't delete these lines, they're for production
-from os import environ
-import ast
+# from os import environ
+# import ast
 
-tumsecret = environ.get('TUM_SECRET')
-tumsecret = ast.literal_eval(tumsecret)
+# tumsecret = environ.get('TUM_SECRET')
+# tumsecret = ast.literal_eval(tumsecret)
 
 
 class Index( View ):

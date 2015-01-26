@@ -7,15 +7,16 @@ from pprint import pprint as print
 from sa_api.api import Score
 import requests
 import base64
-# from goog.keysecret import hiddeninfo
+from goog.keysecret import hiddeninfo
 
 #don't delete these lines, they're for production
 
-from os import environ
-import ast
+# from os import environ
+# import ast
 
-hiddeninfo = environ.get('GOOG_SECRET')
-hiddeninfo = ast.literal_eval(hiddeninfo)
+# hiddeninfo = environ.get('GOOG_SECRET')
+# hiddeninfo = ast.literal_eval(hiddeninfo)
+print(hiddeninfo)
 
 API_KEY = hiddeninfo["API_KEY"]
 CLIENT_ID = hiddeninfo["Client_ID"]
@@ -33,8 +34,7 @@ SCOPE = [ 'profile',
           'https://mail.google.com/',
           ]
 
-SCOPE = ' '.join(SCOPE)
-oath = OAuth2Session(CLIENT_ID, CLIENT_SECRET, redirect_uri=REDIRECT_URL, scope=SCOPE)
+oath = OAuth2Session(CLIENT_ID, redirect_uri=REDIRECT_URL, scope=SCOPE)
                 # site='https://www.googleapis.com/oauth2/v1',
                 # authorize_url=,
                 # token_url='https://accounts.google.com/o/oauth2/token'
