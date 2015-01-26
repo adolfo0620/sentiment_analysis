@@ -34,10 +34,10 @@ SCOPE = [ 'profile',
           ]
 
 SCOPE = ' '.join(SCOPE)
-client = OAuth2Session(CLIENT_ID, CLIENT_SECRET,
-                site='https://www.googleapis.com/oauth2/v1',
-                authorize_url='https://accounts.google.com/o/oauth2/auth',
-                token_url='https://accounts.google.com/o/oauth2/token')
+oath = OAuth2Session(CLIENT_ID, CLIENT_SECRET, redirect_uri=REDIRECT_URL, scope=SCOPE)
+                # site='https://www.googleapis.com/oauth2/v1',
+                # authorize_url=,
+                # token_url='https://accounts.google.com/o/oauth2/token'
 
 
 class Index( View ):
@@ -45,15 +45,16 @@ class Index( View ):
         if Google_access.objects.filter(user=request.user).exists():
             return redirect( '/goog/display')
         else:
-            authorize_url = client.auth_code.authorize_url(redirect_uri=REDIRECT_URL, scope=SCOPE)
+            authorize_url, state = oath.authorization_url('https://accounts.google.com/o/oauth2/auth', access_type="offline", approval_prompt="force")
             return redirect( authorize_url )
 
 
 class Callback( View ):
     def get(self, request):
         code = request.GET['code']
-        access_token = client.auth_code.get_token(code, redirect_uri=REDIRECT_URL)
-        ret = access_token.get('/userinfo')
+#think the authorization response is wrong here
+        access_token = oath.fetch_token('https://accounts.google.com/o/oauth2/token', authorization_response=code, client_secret=CLIENT_SECRET)
+        ret = oath.get('https://www.googleapis.com/oauth2/v1/userinfo')
         info = ret.parsed
         Google_access.objects.create(user=request.user,token= str(access_token.headers),secret="none")
         return redirect('/goog/display')
