@@ -2,7 +2,7 @@
 
 View graphs depicting the positivity or negativity of words, phrases, and/or hashtag being talked about on twitter, tumblr, or reddit.  Or run your Gmail account through our sentiment analysis.  Or any block of text you'd like to measure the sentiment of! 
 
-See live (here)[http://sa.718it.biz/]
+See live [here](http://sa.718it.biz/)
 
 ## Setup
 
