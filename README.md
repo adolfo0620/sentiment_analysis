@@ -1,3 +1,9 @@
+#Sentiment Analysis
+
+View graphs depicting the positivity or negativity of words, phrases, and/or hashtag being talked about on twitter, tumblr, or reddit.  Or run your Gmail account through our sentiment analysis.  Or any block of text you'd like to measure the sentiment of! 
+
+See live [here][http://sa.718it.biz/]
+
 ## Setup
 
 `git clone https://github.com/himleyb85/sentiment_analysis`
@@ -51,25 +57,3 @@ Should be good to go.  To start server,
 `python3 manage.py runserver`
 
 then direct your browser to http://127.0.0.1:8000
-
-
-### API
-Accepts block of text, no matter where from
-
-Uses the lists of positive and negative words from [here](http://www.cs.uic.edu/~liub/FBS/sentiment-analysis.html#lexicon)
-
-### Twitter
-
-more retweeted tweets should have more weight
-
-be able to search by hashtag, account, or just words by themselves
-
-will use D3 to display the setiment
-
-to start, thinking pie chart for total sentiment, positive score, and negative score
-
-line graph, charting change in sentiment over time if given date imputs (i.e., tweet dates)
-
-chart ranking most used adjectives
-
-scattered plot points of other popular hashtags associated 
